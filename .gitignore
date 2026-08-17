@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# 분석 대상 바이너리 (커밋 금지)
+*.apk
+*.aab
+*.ipa
+*.dex
+*.so
+sample-apps/
+
+# 도구 출력물
+*.log
+out/
+decompiled/
+
+# 개인 메모
+private/
