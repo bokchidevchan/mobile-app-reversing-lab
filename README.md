@@ -5,8 +5,8 @@ Android와 iOS 앱이 실제로 어떻게 빌드되고, 배포된 바이너리�
 
 ## 다루는 주제
 
-- [ ] APK 구조와 빌드 산출물 (DEX, AAB, 리소스, 서명 v1~v4)
-- [ ] Android 리버싱 도구: jadx, apktool, Frida, objection
+- [x] APK 구조와 빌드 산출물 (DEX, AAB, 리소스, 서명 v1~v4)
+- [x] Android 리버싱 도구: jadx, apktool, Frida, objection (정적: UnCrackable L1 실습 완료 / 동적: 예정)
 - [ ] iOS 바이너리 분석: Mach-O, class-dump, Hopper/Ghidra, ipa 구조
 - [ ] 난독화와 보호 기법: R8/ProGuard, DexGuard
 - [ ] 네트워크 트래픽 분석: mitmproxy, SSL Pinning
@@ -18,6 +18,7 @@ Android와 iOS 앱이 실제로 어떻게 빌드되고, 배포된 바이너리�
 
 - `docs/` — 주제별 개념 정리
 - `notes/` — 분석 실습 기록
+- `tools/` — 분석에 쓰는 스크립트, 격리용 Dockerfile
 
 ## 진행 방식
 

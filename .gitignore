@@ -12,6 +12,7 @@ sample-apps/
 # 도구 출력물
 *.log
 out/
+out-container/
 decompiled/
 
 # 개인 메모

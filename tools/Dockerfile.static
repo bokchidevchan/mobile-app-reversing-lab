@@ -1,0 +1,44 @@
+# 정적 분석용 격리 컨테이너 (jadx + apktool)
+#
+# 왜 컨테이너로 도는가:
+#   jadx/apktool는 APK를 실행하지 않고 파싱만 하지만, "파서 자체"에 취약점이
+#   있으면 조작된 APK가 그걸 찌를 수 있다. 출처 불명 샘플을 다룰 때 그 위험까지
+#   컨테이너 안에 가둔다. 분석 대상은 항상 read-only(:ro)로 마운트한다.
+#
+# 빌드:
+#   docker build -f tools/Dockerfile.static -t apk-static .
+# 사용 (호스트의 sample-apps를 읽기 전용으로 넣고, 결과는 out/으로 받음):
+#   docker run --rm --network none \
+#     -v "$PWD/sample-apps:/in:ro" -v "$PWD/out:/out" \
+#     apk-static jadx -d /out /in/UnCrackable-Level1.apk
+#
+# --network none: 분석 중 컨테이너의 네트워크를 완전히 끊는다. 샘플이 몰래
+#   어디로 연결을 시도해도 나갈 곳이 없다.
+
+FROM eclipse-temurin:17-jdk-jammy
+
+ARG JADX_VERSION=1.5.1
+ARG APKTOOL_VERSION=2.10.0
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends unzip curl ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+# jadx (공식 릴리스 zip)
+RUN curl -fsSL -o /tmp/jadx.zip \
+      https://github.com/skylot/jadx/releases/download/v${JADX_VERSION}/jadx-${JADX_VERSION}.zip \
+ && unzip -q /tmp/jadx.zip -d /opt/jadx \
+ && rm /tmp/jadx.zip
+ENV PATH="/opt/jadx/bin:${PATH}"
+
+# apktool (래퍼 스크립트 + jar)
+RUN curl -fsSL -o /usr/local/bin/apktool \
+      https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool \
+ && curl -fsSL -o /usr/local/bin/apktool.jar \
+      https://github.com/iBotPeaches/Apktool/releases/download/v${APKTOOL_VERSION}/apktool_${APKTOOL_VERSION}.jar \
+ && chmod +x /usr/local/bin/apktool /usr/local/bin/apktool.jar
+
+# 루트가 아닌 사용자로 분석 (권한 최소화)
+RUN useradd -m analyst
+USER analyst
+WORKDIR /work
