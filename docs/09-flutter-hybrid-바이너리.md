@@ -24,6 +24,39 @@ apk-audit.py에 프레임워크 감지를 넣었다.
   - Flutter — 코드는 Dart AOT 스냅샷(lib/*/libapp.so). jadx 무의미, blutter/reFlutter 필요
 ```
 
+## 프레임워크별 분석법 비교표
+
+"어디를 어떤 도구로 보나 + 네트워크는 어떻게 잡나 + 난이도"를 한 표로.
+
+| 프레임워크 | 감지 신호 | 코드 형태 | 분석 도구 | 네트워크(프록시/CA) | 난이도 |
+|---|---|---|---|---|---|
+| 네이티브 Android | classes.dex | DEX 바이트코드 | jadx | 시스템 프록시·CA 그대로 됨 | 낮음 |
+| 네이티브 iOS | Mach-O | ARM64 기계어 | otool·Ghidra·class-dump | 시스템 신뢰 사용 | 중간 |
+| **React Native (JSC)** | index.android.bundle | 압축된 JS(평문) | JS beautify로 읽기 | 시스템 프록시 대체로 존중 | 낮음 |
+| **React Native (Hermes)** | index.android.bundle + libhermes | Hermes 바이트코드(.hbc) | hermes-dec·hbctool | 시스템 프록시 존중(핀닝은 별개) | 중간 |
+| **Flutter** | libflutter.so·libapp.so·flutter_assets/ | Dart AOT 스냅샷 | blutter·reFlutter | 프록시·시스템 CA **무시** → reFlutter/Frida | 높음 |
+| Cordova/Ionic | assets/www·cordova.js | HTML/JS | 그냥 열기 | WebView라 프록시·CA 됨 | 낮음 |
+| Xamarin/.NET MAUI | libmonodroid.so·assemblies/ | .NET IL(어셈블리) | dnSpy·ILSpy | HttpClient 설정 따라 다름 | 중간 |
+| Unity | libil2cpp.so·global-metadata.dat | IL2CPP(네이티브) | Il2CppDumper | UnityWebRequest, 프록시 제각각 | 높음 |
+
+### React Native가 두 갈래인 이유 (중요)
+
+같은 React Native라도 JS 엔진에 따라 난이도가 갈린다.
+
+- **JSC(옛 방식)**: `index.android.bundle`이 그냥 압축된 JavaScript. 열어서 정렬(beautify)만 하면
+  로직이 다 읽힌다. 문자열·API 호출·엔드포인트가 평문. 사실상 제일 쉬운 편.
+- **Hermes(요즘 기본)**: 번들이 Hermes 바이트코드(.hbc)로 컴파일돼 있다. 그냥 열면 깨져 보이고
+  `hermes-dec`나 `hbctool`로 역어셈블해야 한다. Hermes 버전에 도구가 맞아야 함(Flutter 스냅샷과 비슷한 버전 이슈).
+
+번들 앞부분 매직으로 구분: Hermes는 파일 시작이 `0x1F 0x1E ...`(Hermes bytecode) 시그니처.
+평문 JS면 `var __BUNDLE_START` 같은 게 보인다.
+
+### 프레임워크별 "검수 포인트"
+
+- Flutter/Unity/RN-Hermes: 문자열이 평문 dex에 안 잡히니, 트래커·엔드포인트를 dex strings로만 찾으면 놓친다 → 각 형태에 맞는 추출 필요.
+- Cordova/Ionic: 원격 URL 로드(원격 코드), addJavascriptInterface 브릿지 과다 노출이 핵심.
+- 공통: "네트워크가 안 잡힌다"면 프레임워크(특히 Flutter)부터 의심.
+
 ## Flutter가 특히 까다로운 이유
 
 - **libflutter.so** = 엔진(공통, 분석 대상 아님). **libapp.so** = 우리 앱의 Dart 코드가

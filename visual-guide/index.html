@@ -482,6 +482,27 @@ JNI: gXftm3iswpkVgBNDUp  ← 난독화된 이름으로 네이티브 진입</pre>
       <div class="item"><span class="ic">⑤</span><div class="body"><b>플래그 추출</b><span>토큰화/검증 규칙 역추적 → 다단계 플래그</span></div></div>
     </div>
   </div>
+  <div class="card">
+    <b>프레임워크별 분석표 — 어디를 어떤 도구로, 네트워크는 어떻게</b>
+    <p class="note">가장 먼저 "이 앱이 뭘로 만들어졌나"를 판별해야 도구가 정해져요. React Native는 엔진에 따라 둘로 갈립니다.</p>
+    <div class="tablewrap" style="margin-top:12px"><table style="min-width:640px">
+      <thead><tr><th>프레임워크</th><th>감지 신호</th><th>코드 형태</th><th>분석 도구</th><th>네트워크</th><th>난이도</th></tr></thead>
+      <tbody>
+        <tr><td>네이티브 Android</td><td class="mono">classes.dex</td><td>DEX 바이트코드</td><td>jadx</td><td>프록시·CA 그대로</td><td><span class="badge safe">낮음</span></td></tr>
+        <tr><td>네이티브 iOS</td><td class="mono">Mach-O</td><td>ARM64 기계어</td><td>otool·Ghidra</td><td>시스템 신뢰</td><td><span class="badge key">중간</span></td></tr>
+        <tr><td><b>React Native (JSC)</b></td><td class="mono">index.android.bundle</td><td>압축 JS(평문)</td><td>JS beautify</td><td>프록시 존중</td><td><span class="badge safe">낮음</span></td></tr>
+        <tr><td><b>React Native (Hermes)</b></td><td class="mono">+ libhermes</td><td>Hermes 바이트코드</td><td>hermes-dec·hbctool</td><td>프록시 존중</td><td><span class="badge key">중간</span></td></tr>
+        <tr><td><b>Flutter</b></td><td class="mono">libflutter/libapp.so</td><td>Dart AOT 스냅샷</td><td>blutter·reFlutter</td><td><b>프록시·CA 무시</b></td><td><span class="badge broken">높음</span></td></tr>
+        <tr><td>Cordova/Ionic</td><td class="mono">assets/www</td><td>HTML/JS</td><td>그냥 열기</td><td>WebView라 됨</td><td><span class="badge safe">낮음</span></td></tr>
+        <tr><td>Xamarin/.NET</td><td class="mono">libmonodroid.so</td><td>.NET IL</td><td>dnSpy·ILSpy</td><td>설정 따라</td><td><span class="badge key">중간</span></td></tr>
+        <tr><td>Unity</td><td class="mono">libil2cpp.so</td><td>IL2CPP(네이티브)</td><td>Il2CppDumper</td><td>제각각</td><td><span class="badge broken">높음</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="grid2" style="margin-top:12px">
+      <div><span class="badge key">React Native가 두 갈래인 이유</span><p class="note" style="margin-top:6px"><b>JSC</b>: 번들이 평문 JS → beautify만 하면 다 읽힘(제일 쉬움). <b>Hermes</b>(요즘 기본): 바이트코드(.hbc)라 hermes-dec로 역어셈블 필요. 번들 앞 매직으로 구분.</p></div>
+      <div><span class="badge broken">Flutter 주의</span><p class="note" style="margin-top:6px">코드가 libapp.so 스냅샷이라 jadx 무의미. 게다가 <b>Dart가 시스템 프록시·CA를 무시</b>해서 mitm이 기본으론 안 잡힘 → reFlutter/Frida 필요.</p></div>
+    </div>
+  </div>
   <p class="note">교훈: 실전 앱은 "정적/동적/안티탐지 우회"를 다 섞어야 하는 종합판. 로직과 탐지를 네이티브로 내리고 JNI 이름까지 가린 게 상용 보호에 가장 가깝다.</p>
 </section>
 
