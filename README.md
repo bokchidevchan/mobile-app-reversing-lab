@@ -8,7 +8,7 @@ Android와 iOS 앱이 실제로 어떻게 빌드되고, 배포된 바이너리�
 - [x] APK 구조와 빌드 산출물 (DEX, AAB, 리소스, 서명 v1~v4)
 - [x] Android 리버싱 도구: jadx, apktool, Frida, objection (UnCrackable L1 정적+동적 실습 완료)
 - [x] iOS 바이너리 분석: Mach-O 구조, otool/nm/strings, Frida (네이티브 크랙미 정적+동적 완료 / 실기기·IPA는 예정)
-- [ ] 난독화와 보호 기법: R8/ProGuard, DexGuard
+- [x] 난독화와 보호 기법: R8/ProGuard, Allatori, DexGuard (기법·도구 비교 정리)
 - [ ] 네트워크 트래픽 분석: mitmproxy, SSL Pinning
 - [ ] 플랫폼 심사 정책: Google Play / App Store
 - [ ] Flutter/Hybrid 앱의 바이너리 특성 (libapp.so, 스냅샷)
