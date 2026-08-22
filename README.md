@@ -12,7 +12,7 @@ Android와 iOS 앱이 실제로 어떻게 빌드되고, 배포된 바이너리�
 - [x] 네트워크 트래픽 분석: mitmproxy, SSL Pinning (HTTPS 가로채기 시연 / Android14 system CA·pinning 우회는 심화 예정)
 - [x] 플랫폼 심사 정책: Google Play / App Store (apk-audit.py로 권한·트래커·URL 정적 감사)
 - [x] Flutter/Hybrid 앱의 바이너리 특성 (프레임워크 감지 + Dart 스냅샷/프록시 우회 정리)
-- [x] 샘플 앱 정적/동적 분석 연습 (UnCrackable L1~L3, License_01 keygen / L4 r2pay는 예정)
+- [x] 샘플 앱 정적/동적 분석 연습 (UnCrackable L1~L3, License_01 keygen, L4 r2pay 1차 정찰 / L4 전체 공략은 예정)
 
 ## 폴더 구조
 
