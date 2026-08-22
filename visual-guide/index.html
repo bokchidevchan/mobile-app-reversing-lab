@@ -22,145 +22,186 @@
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;
-  -webkit-font-smoothing:antialiased}
-.wrap{max-width:960px;margin:0 auto;padding:0 20px}
-a{color:var(--brand)}
-h1,h2,h3{text-wrap:balance;line-height:1.2}
-code,.mono{font-family:var(--mono)}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--brand)} code,.mono{font-family:var(--mono)}
+h1,h2,h3{text-wrap:balance;line-height:1.22}
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);font-weight:600}
 
-/* top bar */
-header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;align-items:center;gap:16px;height:56px}
-.brandmark{font-weight:800;letter-spacing:-.02em;white-space:nowrap}
-.brandmark b{color:var(--brand)}
-nav.links{display:flex;gap:4px;margin-left:auto;overflow-x:auto}
-nav.links a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:8px;white-space:nowrap}
-nav.links a:hover{background:var(--brand-soft);color:var(--brand)}
+/* shell: sidebar + main */
+.shell{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
+aside{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--surface);border-right:1px solid var(--line);padding:22px 16px}
+.logo{font-weight:800;letter-spacing:-.02em;font-size:17px;padding:6px 10px 16px}
+.logo b{color:var(--brand)}
+.tablist{display:flex;flex-direction:column;gap:3px}
+.tab{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:none;background:none;
+  color:var(--muted);font-family:var(--sans);font-size:14.5px;font-weight:600;cursor:pointer;text-align:left;width:100%}
+.tab .tn{font-family:var(--mono);font-size:11px;opacity:.6;width:18px;flex:none}
+.tab:hover{background:var(--surface2);color:var(--ink)}
+.tab.active{background:var(--brand-soft);color:var(--brand)}
+.tab .ico{font-size:16px;flex:none}
 
-/* hero */
-.hero{padding:64px 0 40px}
-.hero h1{font-size:clamp(30px,6vw,52px);font-weight:800;letter-spacing:-.03em;margin:.3em 0 .35em}
-.hero p.lead{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:44ch;margin:0}
-.thesis{margin-top:34px;padding:22px 24px;border:1px solid var(--line);border-left:4px solid var(--brand);
-  border-radius:14px;background:var(--surface);box-shadow:var(--shadow);font-size:17px}
-.thesis b{color:var(--brand)}
+main{min-width:0}
+.main{max-width:820px;margin:0 auto;padding:40px 28px 80px}
+.panel{display:none;animation:fade .35s ease}
+.panel.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-section{padding:40px 0;border-top:1px solid var(--line)}
-section h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;letter-spacing:-.02em;margin:.2em 0 .1em}
-section .sub{color:var(--muted);margin:.2em 0 1.6em;max-width:60ch}
-
+h1.ptitle{font-size:clamp(26px,4.5vw,40px);font-weight:800;letter-spacing:-.03em;margin:.15em 0 .1em}
+.psub{color:var(--muted);font-size:17px;margin:.2em 0 1.6em;max-width:60ch}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.card+.card{margin-top:16px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
-
-.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;font-family:var(--mono);
-  padding:3px 9px;border-radius:999px;border:1px solid transparent}
+.svgcard{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:18px}
+svg{display:block;max-width:100%;height:auto}
+.note{font-size:13.5px;color:var(--muted);margin-top:12px}
+.thesis{padding:20px 22px;border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:14px;background:var(--surface);box-shadow:var(--shadow);font-size:17px}
+.thesis b{color:var(--brand)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;font-family:var(--mono);padding:3px 9px;border-radius:999px;border:1px solid transparent}
 .badge.broken{background:var(--broken-soft);color:var(--broken);border-color:color-mix(in srgb,var(--broken) 30%,transparent)}
 .badge.safe{background:var(--safe-soft);color:var(--safe);border-color:color-mix(in srgb,var(--safe) 30%,transparent)}
 .badge.key{background:var(--key-soft);color:var(--key);border-color:color-mix(in srgb,var(--key) 30%,transparent)}
-
-figure{margin:0}
-figcaption{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
-svg{display:block;max-width:100%;height:auto}
-.svgcard{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:18px}
-
-table{width:100%;border-collapse:collapse;font-size:14px}
+pre{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;font-size:12.5px;margin:0;font-family:var(--mono)}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
 th{background:var(--surface2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
 tr:last-child td{border-bottom:none}
-td .mono{font-size:12.5px}
+.pill{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:6px;background:var(--brand-soft);color:var(--brand)}
 
 /* ladder */
 .ladder{display:flex;flex-direction:column;gap:10px}
 .rung{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
-.rung .n{font-family:var(--mono);font-weight:700;color:var(--muted);width:22px;flex:none}
-.rung .t{flex:1}
-.rung .t b{display:block}
-.rung .t span{font-size:13px;color:var(--muted)}
+.rung .n{font-family:var(--mono);font-weight:700;color:var(--muted);width:20px;flex:none}
+.rung .t{flex:1}.rung .t b{display:block}.rung .t span{font-size:13px;color:var(--muted)}
+.rung .st{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
 
-/* key demo */
-.demo{display:grid;grid-template-columns:1fr;gap:14px}
-.demo .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.demo label{font-size:13px;color:var(--muted);font-weight:600}
-.demo input{flex:1;min-width:200px;font-family:var(--mono);font-size:14px;padding:10px 12px;border:1px solid var(--line);
-  border-radius:10px;background:var(--surface2);color:var(--ink)}
-.btn{font-family:var(--sans);font-weight:700;font-size:14px;padding:10px 16px;border-radius:10px;border:1px solid transparent;
-  cursor:pointer;background:var(--brand);color:#fff}
+/* buttons + inputs */
+.btn{font-family:var(--sans);font-weight:700;font-size:14px;padding:9px 15px;border-radius:10px;border:1px solid transparent;cursor:pointer;background:var(--brand);color:#fff}
 .btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
-.btn:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
-.result{font-family:var(--mono);font-size:14px;padding:12px 14px;border-radius:10px;border:1px dashed var(--line);color:var(--muted);min-height:20px}
+.btn:focus-visible,input:focus-visible,.tab:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+label{font-size:13px;color:var(--muted);font-weight:600}
+input[type=text]{flex:1;min-width:180px;font-family:var(--mono);font-size:14px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);color:var(--ink)}
+.result{font-family:var(--mono);font-size:13.5px;padding:11px 13px;border-radius:10px;border:1px dashed var(--line);color:var(--muted)}
 .result.ok{color:var(--safe);border-color:var(--safe);background:var(--safe-soft);border-style:solid}
 .result.bad{color:var(--broken);border-color:var(--broken);background:var(--broken-soft);border-style:solid}
 
-.note{font-size:13px;color:var(--muted);margin-top:12px}
-footer{padding:44px 0 70px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
-.pill{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:6px;background:var(--brand-soft);color:var(--brand)}
+/* signature fingerprint viz */
+.sig-vis{display:flex;align-items:stretch;gap:12px;flex-wrap:wrap}
+.fp-box{flex:1;min-width:180px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface2);display:flex;flex-direction:column;gap:8px}
+.fp-box.match{border-color:var(--safe);background:var(--safe-soft)}
+.fp-box.miss{border-color:var(--broken);background:var(--broken-soft)}
+.fp-label{font-size:12.5px;color:var(--muted);font-weight:600}
+.fp-val{font-size:20px;font-weight:700;letter-spacing:.08em}
+.fp-eq{display:flex;align-items:center;font-size:26px;font-weight:800;color:var(--muted)}
+.fp-box.sealed .fp-val{color:var(--key)}
+.stamp{animation:stamp .4s ease}
+@keyframes stamp{0%{transform:scale(1.4) rotate(-6deg);opacity:.2}100%{transform:none;opacity:1}}
+
+/* XOR animation */
+.xline{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0}
+.cell{width:40px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-family:var(--mono);font-weight:700;border:1px solid var(--line);background:var(--surface2);color:var(--muted);font-size:14px}
+.cell.enc.active{border-color:var(--key);color:var(--key);background:var(--key-soft)}
+.cell.out.reveal{background:var(--safe-soft);border-color:var(--safe);color:var(--safe);animation:pop .3s ease}
+@keyframes pop{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
+.xop{font-family:var(--mono);color:var(--muted);font-size:13px;margin:2px 0}
+
+/* flow tracks (frida / mitm / seat) */
+.track{position:relative;height:118px;margin-top:12px;border-radius:14px;background:var(--surface2);border:1px solid var(--line)}
+.node{position:absolute;top:22px;transform:translateX(-50%);text-align:center;width:120px}
+.node .box{padding:10px 8px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:13px;font-weight:700}
+.node .cap{font-size:11px;color:var(--muted);margin-top:5px}
+.node.on .box{border-color:var(--brand);background:var(--brand-soft);color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.node.ok .box{border-color:var(--safe);background:var(--safe-soft);color:var(--safe)}
+.node.bad .box{border-color:var(--broken);background:var(--broken-soft);color:var(--broken)}
+.wire{position:absolute;top:44px;height:2px;background:var(--line)}
+.dot{position:absolute;top:38px;width:14px;height:14px;border-radius:50%;background:var(--key);opacity:0;box-shadow:0 0 0 4px color-mix(in srgb,var(--key) 25%,transparent)}
+.callout{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);font-family:var(--mono);font-size:11.5px;color:var(--safe);opacity:0;white-space:nowrap;background:var(--surface);border:1px solid var(--safe);border-radius:8px;padding:3px 8px}
+.callout.show{opacity:1;transition:opacity .3s}
+
+@media (max-width:820px){
+  .shell{grid-template-columns:1fr}
+  aside{position:sticky;top:0;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:10px}
+  .logo{display:none}
+  .tablist{flex-direction:row;overflow-x:auto;gap:4px}
+  .tab{white-space:nowrap;padding:8px 12px}.tab .tn{display:none}
+  .main{padding:26px 18px 70px}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
-<header class="top"><div class="wrap">
-  <div class="brandmark">🔓 리버싱 <b>비주얼 노트</b></div>
-  <nav class="links">
-    <a href="#pkg">앱 구조</a><a href="#code">코드 형태</a><a href="#analysis">분석</a>
-    <a href="#hide">비밀 숨기기</a><a href="#key">공개키/개인키</a><a href="#server">클라 vs 서버</a>
-    <a href="#net">네트워크</a><a href="#map">전체 지도</a>
-  </nav>
-</div></header>
+<div class="shell">
+<aside>
+  <div class="logo">🔓 리버싱 <b>비주얼 노트</b></div>
+  <div class="tablist" role="tablist">
+    <button class="tab" data-tab="home"><span class="tn">00</span><span class="ico">🏠</span>개요</button>
+    <button class="tab" data-tab="pkg"><span class="tn">01</span><span class="ico">📦</span>앱 구조</button>
+    <button class="tab" data-tab="code"><span class="tn">02</span><span class="ico">🧬</span>코드 형태</button>
+    <button class="tab" data-tab="analysis"><span class="tn">03</span><span class="ico">🔍</span>정적 vs 동적</button>
+    <button class="tab" data-tab="anim"><span class="tn">04</span><span class="ico">🎬</span>움직이는 설명</button>
+    <button class="tab" data-tab="hide"><span class="tn">05</span><span class="ico">🪜</span>비밀 숨기기</button>
+    <button class="tab" data-tab="key"><span class="tn">06</span><span class="ico">🔑</span>공개키/개인키</button>
+    <button class="tab" data-tab="server"><span class="tn">07</span><span class="ico">🖥️</span>클라 vs 서버</button>
+    <button class="tab" data-tab="net"><span class="tn">08</span><span class="ico">🕵️</span>네트워크</button>
+    <button class="tab" data-tab="map"><span class="tn">09</span><span class="ico">🗺️</span>전체 지도</button>
+  </div>
+</aside>
 
-<div class="wrap">
+<main><div class="main">
 
-<section class="hero" style="border-top:none">
+<!-- HOME -->
+<section class="panel" id="tab-home">
   <div class="eyebrow">Mobile App Reverse Engineering</div>
-  <h1>앱을 뜯어보며 배운 것들, 그림으로</h1>
-  <p class="lead">APK를 여는 것부터, 비밀을 숨기고 다시 뚫는 것까지. 어려운 말 없이 그림으로 정리했어요.</p>
+  <h1 class="ptitle">앱을 뜯어보며 배운 것들, 그림으로</h1>
+  <p class="psub">APK를 여는 것부터 비밀을 숨기고 다시 뚫는 것까지. 왼쪽 목록에서 하나씩 골라 보세요.</p>
   <div class="thesis">한 줄 결론 먼저 &mdash; <b>클라이언트(앱) 안에 "있는" 비밀은 결국 다 나온다.</b>
   숨기는 기술은 시간을 벌 뿐이고, 정말 지키려면 비밀을 아예 앱에 두지 않아야 한다.</div>
+  <div class="grid3" style="margin-top:18px">
+    <div class="card"><span class="badge key">뜯기</span><p class="note" style="margin-top:8px">jadx·Ghidra로 읽고, Frida로 런타임에 가로채고, mitmproxy로 통신을 본다.</p></div>
+    <div class="card"><span class="badge safe">지키기</span><p class="note" style="margin-top:8px">난독화는 시간벌기. 해시/KDF로 원본을 없애고, 서명·서버로 판정을 옮긴다.</p></div>
+    <div class="card"><span class="badge broken">한계</span><p class="note" style="margin-top:8px">클라 방어는 완벽할 수 없다. 진짜 비밀은 서버에.</p></div>
+  </div>
 </section>
 
-<!-- 1. 앱 구조 -->
-<section id="pkg">
+<!-- PKG -->
+<section class="panel" id="tab-pkg">
   <div class="eyebrow">01 / 패키지</div>
-  <h2>앱은 사실 압축파일(ZIP)이다</h2>
-  <p class="sub">안드로이드 APK도, 아이폰 IPA도 확장자만 다른 ZIP이에요. 풀면 부품들이 나옵니다.</p>
+  <h1 class="ptitle">앱은 사실 압축파일(ZIP)이다</h1>
+  <p class="psub">안드로이드 APK도, 아이폰 IPA도 확장자만 다른 ZIP. 풀면 부품들이 나옵니다.</p>
   <div class="svgcard">
-  <svg viewBox="0 0 720 220" role="img" aria-label="APK와 IPA 내부 구조">
+  <svg viewBox="0 0 720 210" role="img" aria-label="APK와 IPA 내부 구조">
     <g font-family="system-ui" font-size="13">
-      <!-- APK -->
-      <rect x="10" y="20" width="330" height="180" rx="12" fill="var(--surface)" stroke="var(--line)"/>
-      <text x="28" y="45" font-weight="700" fill="var(--ink)">📦 APK (안드로이드)</text>
-      <rect x="28" y="58" width="294" height="30" rx="7" fill="var(--brand-soft)"/><text x="40" y="78" fill="var(--brand)">AndroidManifest.xml · 권한/구성</text>
-      <rect x="28" y="94" width="294" height="30" rx="7" fill="var(--key-soft)"/><text x="40" y="114" fill="var(--key)">classes.dex · 코드(바이트코드)</text>
-      <rect x="28" y="130" width="294" height="30" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="40" y="150" fill="var(--ink)">resources.arsc · res/ · 리소스</text>
-      <rect x="28" y="166" width="294" height="26" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="40" y="184" fill="var(--muted)">lib/*.so · 네이티브 · META-INF/ 서명</text>
-      <!-- IPA -->
-      <rect x="380" y="20" width="330" height="180" rx="12" fill="var(--surface)" stroke="var(--line)"/>
-      <text x="398" y="45" font-weight="700" fill="var(--ink)">📦 IPA (아이폰)</text>
-      <rect x="398" y="58" width="294" height="30" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="410" y="78" fill="var(--ink)">Payload/앱.app/</text>
-      <rect x="418" y="94" width="274" height="30" rx="7" fill="var(--key-soft)"/><text x="430" y="114" fill="var(--key)">앱 (Mach-O) · 코드(기계어)</text>
-      <rect x="418" y="130" width="274" height="26" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="430" y="148" fill="var(--muted)">Info.plist · 리소스</text>
-      <text x="398" y="184" fill="var(--broken)">＋ App Store 앱은 FairPlay로 암호화됨</text>
+      <rect x="10" y="16" width="330" height="184" rx="12" fill="var(--surface)" stroke="var(--line)"/>
+      <text x="28" y="41" font-weight="700" fill="var(--ink)">📦 APK (안드로이드)</text>
+      <rect x="28" y="54" width="294" height="30" rx="7" fill="var(--brand-soft)"/><text x="40" y="74" fill="var(--brand)">AndroidManifest.xml · 권한/구성</text>
+      <rect x="28" y="90" width="294" height="30" rx="7" fill="var(--key-soft)"/><text x="40" y="110" fill="var(--key)">classes.dex · 코드(바이트코드)</text>
+      <rect x="28" y="126" width="294" height="30" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="40" y="146" fill="var(--ink)">resources.arsc · res/ · 리소스</text>
+      <rect x="28" y="162" width="294" height="28" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="40" y="181" fill="var(--muted)">lib/*.so · 네이티브 · META-INF/ 서명</text>
+      <rect x="380" y="16" width="330" height="184" rx="12" fill="var(--surface)" stroke="var(--line)"/>
+      <text x="398" y="41" font-weight="700" fill="var(--ink)">📦 IPA (아이폰)</text>
+      <rect x="398" y="54" width="294" height="30" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="410" y="74" fill="var(--ink)">Payload/앱.app/</text>
+      <rect x="418" y="90" width="274" height="30" rx="7" fill="var(--key-soft)"/><text x="430" y="110" fill="var(--key)">앱 (Mach-O) · 코드(기계어)</text>
+      <rect x="418" y="126" width="274" height="28" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="430" y="145" fill="var(--muted)">Info.plist · 리소스</text>
+      <text x="398" y="182" fill="var(--broken)">＋ App Store 앱은 FairPlay로 암호화됨</text>
     </g>
   </svg>
   </div>
-  <p class="note">노란 칸이 "실제 코드"예요. 여기가 분석의 핵심입니다. 안드로이드는 <code>classes.dex</code>, 아이폰은 <code>Mach-O</code>.</p>
+  <p class="note">노란 칸이 "실제 코드"예요. 여기가 분석의 핵심. 안드로이드는 <code>classes.dex</code>, 아이폰은 <code>Mach-O</code>.</p>
 </section>
 
-<!-- 2. 코드 형태 -->
-<section id="code">
+<!-- CODE -->
+<section class="panel" id="tab-code">
   <div class="eyebrow">02 / 코드 형태</div>
-  <h2>안드로이드는 "반쯤 사람 글", 아이폰은 "기계어"</h2>
-  <p class="sub">같은 리버싱인데 난이도가 다른 이유는 코드가 만들어지는 방식이 다르기 때문이에요.</p>
+  <h1 class="ptitle">안드로이드는 "반쯤 사람 글", 아이폰은 "기계어"</h1>
+  <p class="psub">같은 리버싱인데 난이도가 다른 이유는 코드가 만들어지는 방식이 다르기 때문이에요.</p>
   <div class="grid2">
     <div class="card">
       <span class="badge key">Android · DEX</span>
       <h3 style="margin:.5em 0">바이트코드 → jadx로 되돌림</h3>
-      <p style="color:var(--muted);margin:.2em 0 1em">이름·구조가 많이 남아서 <b>Java 소스에 가깝게</b> 복원돼요. 읽기 쉬움.</p>
-      <pre class="mono" style="background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;font-size:12.5px;margin:0">if (a.a(input)) {
+      <p style="color:var(--muted);margin:.2em 0 1em">이름·구조가 많이 남아 <b>Java 소스에 가깝게</b> 복원돼요. 읽기 쉬움.</p>
+      <pre>if (a.a(input)) {
     setTitle("Success!");
 }</pre>
     </div>
@@ -168,112 +209,119 @@ footer{padding:44px 0 70px;color:var(--muted);font-size:13px;border-top:1px soli
       <span class="badge key">iOS · Mach-O</span>
       <h3 style="margin:.5em 0">기계어 → Ghidra로 "의사 C"</h3>
       <p style="color:var(--muted);margin:.2em 0 1em">소스로 못 되돌려요. 디스어셈블/디컴파일러를 <b>한 겹 더</b> 거칩니다.</p>
-      <pre class="mono" style="background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;font-size:12.5px;margin:0">mov  x8, #0xf
+      <pre>mov  x8, #0xf
 ldr  x0, [x9]
 bl   _strcmp   ; ← 어셈블리</pre>
     </div>
   </div>
 </section>
 
-<!-- 3. 분석 -->
-<section id="analysis">
+<!-- ANALYSIS -->
+<section class="panel" id="tab-analysis">
   <div class="eyebrow">03 / 분석 두 방식</div>
-  <h2>안 켜고 읽기(정적) vs 켜고 훔쳐보기(동적)</h2>
-  <p class="sub">비밀을 아무리 숨겨도, 앱이 실제로 쓰려면 언젠가 메모리에 평문으로 뜬다. 그 순간을 노린다.</p>
-  <div class="svgcard">
-  <svg viewBox="0 0 720 210" role="img" aria-label="정적 분석과 동적 분석 비교">
-    <g font-family="system-ui" font-size="13">
-      <rect x="10" y="16" width="340" height="178" rx="12" fill="var(--surface)" stroke="var(--line)"/>
-      <text x="30" y="42" font-weight="700" fill="var(--brand)">🔍 정적 분석</text>
-      <text x="30" y="66" fill="var(--muted)">앱을 실행하지 않고 파일을 읽음</text>
-      <text x="30" y="92" fill="var(--ink)">도구: unzip · jadx · Ghidra · otool</text>
-      <text x="30" y="118" fill="var(--ink)">잡는 것: 코드 로직, 하드코딩 값</text>
-      <text x="30" y="150" fill="var(--safe)">✓ 안전(실행 안 함) · 안티디버깅 무의미</text>
-      <text x="30" y="174" fill="var(--muted)">한계: 런타임에만 생기는 값은 못 봄</text>
-
-      <rect x="370" y="16" width="340" height="178" rx="12" fill="var(--surface)" stroke="var(--line)"/>
-      <text x="390" y="42" font-weight="700" fill="var(--key)">⚡ 동적 분석 (Frida)</text>
-      <text x="390" y="66" fill="var(--muted)">실행 중 프로세스에 끼어들어 후킹</text>
-      <text x="390" y="92" fill="var(--ink)">함수 가로채기 · 인자/반환값 조작</text>
-      <text x="390" y="118" fill="var(--ink)">잡는 것: 복호화된 평문, 키, 통신</text>
-      <text x="390" y="150" fill="var(--broken)">예) 복호화 직후 memcmp 후킹 → 정답</text>
-      <text x="390" y="174" fill="var(--muted)">환경: 에뮬레이터 / 탈옥·시뮬레이터</text>
-    </g>
-  </svg>
-  </div>
-</section>
-
-<!-- 4. 비밀 숨기기 사다리 -->
-<section id="hide">
-  <div class="eyebrow">04 / 비밀 숨기기</div>
-  <h2>숨기는 강도 사다리 &mdash; 그리고 어디서 뚫리나</h2>
-  <p class="sub">직접 만든 앱에 방어를 한 층씩 올리고 매번 다시 뚫어봤어요. 결과를 badge로 표시했습니다.</p>
-  <div class="ladder">
-    <div class="rung"><span class="n">1</span><div class="t"><b>평문 하드코딩</b><span>정답을 코드에 그대로</span></div><span class="badge broken">즉시 노출</span></div>
-    <div class="rung"><span class="n">2</span><div class="t"><b>XOR / AES 암호화</b><span>키와 암호문이 코드에 함께 있음</span></div><span class="badge broken">키 꺼내 복호화</span></div>
-    <div class="rung"><span class="n">3</span><div class="t"><b>네이티브(.so)로 이동</b><span>jadx는 막히지만 Ghidra엔 열림</span></div><span class="badge broken">Ghidra로 읽음</span></div>
-    <div class="rung"><span class="n">4</span><div class="t"><b>런타임 키 유도 + 컨트롤 플로우 난독화</b><span>흐름이 스파게티가 됨</span></div><span class="badge broken">Frida로 런타임 탈취</span></div>
-    <div class="rung"><span class="n">5</span><div class="t"><b>해시 검증 (SHA-256)</b><span>정답을 저장 안 하고 지문만 비교</span></div><span class="badge safe">정적·동적 실패<br></span><span class="badge broken">약하면 brute-force</span></div>
-    <div class="rung"><span class="n">6</span><div class="t"><b>강한 정답 + salt + 느린 KDF(PBKDF2)</b><span>추측 1회에 큰 비용</span></div><span class="badge safe">사실상 못 뚫음</span></div>
-  </div>
-  <p class="note">핵심: 1~4는 "숨기기"라 결국 찾으면 나온다. 5~6은 <b>정답을 아예 안 두는 설계</b>라 뽑을 게 없다. 단, 이건 "확인만 하면 되는 비밀"(비번/정답)에만 통한다.</p>
-</section>
-
-<!-- 5. 공개키/개인키 -->
-<section id="key">
-  <div class="eyebrow">05 / 공개키 · 개인키</div>
-  <h2>공개키 / 개인키, 밀랍 봉인으로 이해하기</h2>
-  <p class="sub">열쇠가 두 개예요. 하나는 "찍는 도장", 하나는 "진짜인지 알아보는 눈". 도장 없이는 같은 봉인을 못 찍습니다.</p>
-
-  <div class="grid2" style="margin-bottom:16px">
-    <div class="card">
-      <span class="badge key">🔑 개인키 (Private)</span>
-      <p style="margin:.7em 0 0"><b>도장</b>. 벤더/서버만 가짐. 절대 배포 안 함.<br>이걸로만 <b>서명(발급)</b>할 수 있어요.</p>
+  <h1 class="ptitle">안 켜고 읽기(정적) vs 켜고 훔쳐보기(동적)</h1>
+  <p class="psub">비밀을 아무리 숨겨도, 앱이 실제로 쓰려면 언젠가 메모리에 평문으로 뜬다. 그 순간을 노린다.</p>
+  <div class="grid2">
+    <div class="card"><span class="badge safe">🔍 정적 분석</span>
+      <p style="margin:.6em 0 0"><b>앱을 실행하지 않고</b> 파일을 읽음.<br>도구: unzip · jadx · Ghidra · otool<br>잡는 것: 코드 로직, 하드코딩 값<br><span style="color:var(--muted)">한계: 런타임에만 생기는 값은 못 봄</span></p>
     </div>
-    <div class="card">
-      <span class="badge safe">👁️ 공개키 (Public)</span>
-      <p style="margin:.7em 0 0"><b>알아보는 눈</b>. 아무한테나 줘도 됨. 앱에 넣어도 안전.<br>이걸로는 <b>검증만</b> 되고 서명은 못 해요.</p>
+    <div class="card"><span class="badge key">⚡ 동적 분석 (Frida)</span>
+      <p style="margin:.6em 0 0"><b>실행 중</b> 프로세스에 끼어들어 후킹.<br>함수 가로채기 · 인자/반환값 조작<br>잡는 것: 복호화된 평문, 키, 통신<br><span style="color:var(--muted)">환경: 에뮬레이터 / 탈옥·시뮬레이터</span></p>
     </div>
   </div>
+  <p class="note">→ "움직이는 설명" 탭에서 Frida가 값을 가로채는 걸 애니메이션으로 볼 수 있어요.</p>
+</section>
 
-  <div class="svgcard" style="margin-bottom:16px">
-  <svg viewBox="0 0 720 200" role="img" aria-label="서명과 검증 흐름">
-    <g font-family="system-ui" font-size="12.5">
-      <text x="20" y="28" font-weight="700" fill="var(--key)">벤더(서버) — 개인키로 서명</text>
-      <rect x="20" y="40" width="150" height="40" rx="8" fill="var(--surface)" stroke="var(--line)"/><text x="34" y="64" fill="var(--ink)">라이선스 내용</text>
-      <text x="180" y="64" fill="var(--muted)">＋</text>
-      <rect x="200" y="40" width="120" height="40" rx="8" fill="var(--key-soft)"/><text x="214" y="64" fill="var(--key)">🔑 서명</text>
-      <path d="M328 60 H400" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#a)"/>
-      <text x="335" y="52" fill="var(--muted)">배포</text>
+<!-- ANIM -->
+<section class="panel" id="tab-anim">
+  <div class="eyebrow">04 / 움직이는 설명</div>
+  <h1 class="ptitle">🎬 버튼을 눌러 움직임으로 이해하기</h1>
+  <p class="psub">글로는 감이 안 오는 세 가지를 애니메이션으로. 재생 버튼을 누르세요.</p>
 
-      <text x="410" y="28" font-weight="700" fill="var(--safe)">앱 — 공개키로 검증</text>
-      <rect x="410" y="40" width="290" height="40" rx="8" fill="var(--surface)" stroke="var(--line)"/><text x="424" y="64" fill="var(--ink)">내용＋서명을 공개키로 대조</text>
-
-      <rect x="20" y="110" width="330" height="70" rx="10" fill="var(--safe-soft)" stroke="var(--safe)"/>
-      <text x="36" y="135" font-weight="700" fill="var(--safe)">✓ 그대로면</text><text x="36" y="158" fill="var(--ink)">진짜 + 안 바뀜 → 통과</text>
-      <rect x="370" y="110" width="330" height="70" rx="10" fill="var(--broken-soft)" stroke="var(--broken)"/>
-      <text x="386" y="135" font-weight="700" fill="var(--broken)">✗ 한 글자만 바뀌거나</text><text x="386" y="158" fill="var(--ink)">남의 키로 서명 → 실패</text>
-      <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--muted)"/></marker></defs>
-    </g>
-  </svg>
+  <div class="card">
+    <div class="row" style="justify-content:space-between"><b>① XOR로 숨긴 정답 되살리기</b><button class="btn" id="xorPlay">▶ 재생</button></div>
+    <p class="note">앱엔 뒤죽박죽 바이트(암호문)만 저장돼요. 여기에 키를 XOR하면 글자가 되살아납니다.</p>
+    <div class="xline" id="xorEnc"></div>
+    <div class="xop">⊕ 키 0x2a =</div>
+    <div class="xline" id="xorOut"></div>
   </div>
 
   <div class="card">
-    <div class="eyebrow" style="color:var(--muted)">직접 해보기 (시뮬레이션)</div>
-    <h3 style="margin:.3em 0 .8em">서명 → 검증 → 변조 실험</h3>
-    <div class="demo">
-      <div class="row"><label style="width:70px">내용</label><input id="msg" value="user=demo;plan=pro" aria-label="라이선스 내용"></div>
-      <div class="row">
-        <button class="btn" id="sign">🔑 개인키로 서명</button>
-        <button class="btn ghost" id="verify">👁️ 공개키로 검증</button>
-        <button class="btn ghost" id="tamper">✂️ 내용 몰래 바꾸기</button>
-      </div>
-      <div class="result" id="out">서명 버튼을 눌러 시작하세요.</div>
+    <div class="row" style="justify-content:space-between"><b>② Frida가 복호화 직후 값을 가로채기</b><button class="btn" id="fPlay">▶ 재생</button></div>
+    <p class="note">아무리 숨겨도 앱이 비교하려면 잠깐 평문이 메모리에 뜬다. 그 순간을 후킹.</p>
+    <div class="track" id="fTrack">
+      <div class="wire" style="left:16%;width:68%"></div>
+      <div class="node app" style="left:16%"><div class="box">📱 앱</div><div class="cap">check(입력)</div></div>
+      <div class="node" id="fMid" style="left:50%"><div class="box">🕵️ Frida</div><div class="cap">memcmp 후킹</div></div>
+      <div class="node" id="fEnd" style="left:84%"><div class="box" id="fEndBox">🔒 잠김</div><div class="cap">결과</div></div>
+      <div class="dot" id="fDot"></div>
+      <div class="callout" id="fCall">탈취: "UNLOCK"</div>
     </div>
-    <p class="note">＊브라우저 안 시뮬레이션이에요. 실제로는 openssl로 Ed25519 서명(64바이트)을 만들고 검증합니다. 원리는 동일: 내용이 조금이라도 바뀌면 서명이 깨져요.</p>
   </div>
 
-  <div class="card" style="margin-top:16px">
+  <div class="card">
+    <div class="row" style="justify-content:space-between"><b>③ mitmproxy가 통신을 들여다보기</b><button class="btn" id="mPlay">▶ 재생</button></div>
+    <p class="note">가운데 프록시가 TLS를 대신 맺으면, 지나가는 요청이 평문으로 보인다.</p>
+    <div class="track" id="mTrack">
+      <div class="wire" style="left:16%;width:68%"></div>
+      <div class="node app" style="left:16%"><div class="box">📱 앱</div><div class="cap">요청</div></div>
+      <div class="node" id="mMid" style="left:50%"><div class="box">🕵️ mitmproxy</div><div class="cap">복호화</div></div>
+      <div class="node" style="left:84%"><div class="box">🌐 서버</div><div class="cap">응답</div></div>
+      <div class="dot" id="mDot"></div>
+      <div class="callout" id="mCall">GET /pay?token=ABC123</div>
+    </div>
+  </div>
+</section>
+
+<!-- HIDE -->
+<section class="panel" id="tab-hide">
+  <div class="eyebrow">05 / 비밀 숨기기</div>
+  <h1 class="ptitle">숨기는 강도 사다리 &mdash; 어디서 뚫리나</h1>
+  <p class="psub">직접 만든 앱에 방어를 한 층씩 올리고 매번 다시 뚫어봤어요. 결과를 badge로 표시.</p>
+  <div class="ladder">
+    <div class="rung"><span class="n">1</span><div class="t"><b>평문 하드코딩</b><span>정답을 코드에 그대로</span></div><div class="st"><span class="badge broken">즉시 노출</span></div></div>
+    <div class="rung"><span class="n">2</span><div class="t"><b>XOR / AES 암호화</b><span>키와 암호문이 코드에 함께</span></div><div class="st"><span class="badge broken">키 꺼내 복호화</span></div></div>
+    <div class="rung"><span class="n">3</span><div class="t"><b>네이티브(.so)로 이동</b><span>jadx는 막히지만 Ghidra엔 열림</span></div><div class="st"><span class="badge broken">Ghidra로 읽음</span></div></div>
+    <div class="rung"><span class="n">4</span><div class="t"><b>런타임 키 유도 + 흐름 난독화</b><span>흐름이 스파게티가 됨</span></div><div class="st"><span class="badge broken">Frida 런타임 탈취</span></div></div>
+    <div class="rung"><span class="n">5</span><div class="t"><b>해시 검증 (SHA-256)</b><span>정답 대신 지문만 저장</span></div><div class="st"><span class="badge safe">정적·동적 실패</span><span class="badge broken">약하면 brute-force</span></div></div>
+    <div class="rung"><span class="n">6</span><div class="t"><b>강한 정답 + salt + 느린 KDF</b><span>추측 1회에 큰 비용</span></div><div class="st"><span class="badge safe">사실상 못 뚫음</span></div></div>
+  </div>
+  <p class="note">1~4는 "숨기기"라 결국 찾으면 나온다. 5~6은 <b>정답을 아예 안 두는 설계</b>라 뽑을 게 없다. 단, "확인만 하면 되는 비밀"에만 통함(→ 클라 vs 서버 탭).</p>
+</section>
+
+<!-- KEY -->
+<section class="panel" id="tab-key">
+  <div class="eyebrow">06 / 공개키 · 개인키</div>
+  <h1 class="ptitle">공개키 / 개인키, 밀랍 봉인으로</h1>
+  <p class="psub">열쇠가 두 개예요. 하나는 "찍는 도장", 하나는 "진짜인지 알아보는 눈". 도장 없이는 같은 봉인을 못 찍습니다.</p>
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card"><span class="badge key">🔑 개인키 (Private)</span><p style="margin:.7em 0 0"><b>도장</b>. 벤더/서버만 가짐. 절대 배포 안 함.<br>이걸로만 <b>서명(발급)</b>할 수 있어요.</p></div>
+    <div class="card"><span class="badge safe">👁️ 공개키 (Public)</span><p style="margin:.7em 0 0"><b>알아보는 눈</b>. 아무한테나 줘도 됨. 앱에 넣어도 안전.<br>이걸로는 <b>검증만</b> 되고 서명은 못 해요.</p></div>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow" style="color:var(--muted)">직접 해보기</div>
+    <h3 style="margin:.3em 0 .5em">지문으로 이해하는 서명·검증</h3>
+    <p style="color:var(--muted);margin:.2em 0 1em;font-size:15px">
+      <b>지문</b>은 내용을 요약한 짧은 값(내용이 1글자만 바뀌어도 완전히 달라짐).<br>
+      · <b>서명</b> = "지금 내용의 지문"을 개인키로 도장 찍어 <b>봉인에 새기는</b> 것<br>
+      · <b>검증</b> = "지금 내용의 지문"이 <b>봉인 속 지문과 같은지</b> 보는 것</p>
+    <div class="row" style="margin-bottom:14px"><label style="width:44px">내용</label><input type="text" id="msg" value="user=demo;plan=pro" aria-label="라이선스 내용"></div>
+    <div class="sig-vis">
+      <div class="fp-box" id="fpNow"><span class="fp-label">📄 지금 내용의 지문</span><span class="fp-val mono" id="fpNowVal">—</span></div>
+      <div class="fp-eq" id="fpEq">?</div>
+      <div class="fp-box sealed" id="fpSeal"><span class="fp-label">🔒 봉인에 새겨진 지문</span><span class="fp-val mono" id="fpSealVal">(서명 전)</span></div>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn" id="sign">🔑 개인키로 서명</button>
+      <button class="btn ghost" id="verify">👁️ 공개키로 검증</button>
+      <button class="btn ghost" id="tamper">✂️ 내용 몰래 바꾸기</button>
+    </div>
+    <div class="result" id="out" style="margin-top:12px">① 서명을 누르면 지금 지문이 봉인에 새겨져요.</div>
+    <p class="note">해보기 순서: 서명 → 검증(✓) → 내용 바꾸기 → 다시 검증(✗). 내용이 바뀌면 "지금 지문"이 달라져 봉인 속 지문과 안 맞아요. 개인키가 없으면 봉인을 새로 못 새깁니다.</p>
+  </div>
+
+  <div class="card">
     <b>봉인이 못 하는 것 (오해 주의)</b>
     <div class="grid3" style="margin-top:12px">
       <div><span class="badge broken">비밀 유지 ✗</span><p class="note" style="margin-top:8px">암호화가 아니라 봉인. 내용은 그대로 읽힘.</p></div>
@@ -283,12 +331,22 @@ bl   _strcmp   ; ← 어셈블리</pre>
   </div>
 </section>
 
-<!-- 6. 클라 vs 서버 -->
-<section id="server">
-  <div class="eyebrow">06 / 어디서 지키나</div>
-  <h2>확인(verify)은 앱에서, 사용(use)·판정은 서버에서</h2>
-  <p class="sub">"이 값을 확인만 하면 되나, 실제로 써야 하나?"가 전부예요.</p>
-  <div class="tablewrap">
+<!-- SERVER -->
+<section class="panel" id="tab-server">
+  <div class="eyebrow">07 / 어디서 지키나</div>
+  <h1 class="ptitle">확인은 앱에서, 사용·판정은 서버에서</h1>
+  <p class="psub">딱 하나만 물어보면 돼요. <b>"이 값을 확인만 하면 되나, 실제로 써야 하나?"</b></p>
+
+  <div class="grid2">
+    <div class="card"><span class="badge safe">확인(verify)만 하면 됨</span>
+      <p style="margin:.6em 0 0">"이 입력이 맞아?"만 판단. 원본을 안 가져도 됨.<br>예: 비밀번호, 라이선스 진위, 정답.<br><b>→ 해시/KDF나 공개키 검증으로 앱에서도 안전.</b></p>
+    </div>
+    <div class="card"><span class="badge broken">실제로 써(use)야 함</span>
+      <p style="margin:.6em 0 0">그 값 자체를 어딘가에 사용해야 함.<br>예: API 키(서버에 보냄), 복호화 키.<br><b>→ 쓰는 순간 메모리에 뜸. 클라에선 못 숨김 → 서버로.</b></p>
+    </div>
+  </div>
+
+  <div class="tablewrap" style="margin-top:16px">
     <table>
       <thead><tr><th>지켜야 할 것</th><th>어디서</th><th>왜</th></tr></thead>
       <tbody>
@@ -297,98 +355,221 @@ bl   _strcmp   ; ← 어셈블리</pre>
         <tr><td>라이선스 <b>발급</b></td><td class="mono">서버 (개인키)</td><td>발급 권한을 앱에 두면 위조됨</td></tr>
         <tr><td>재사용/시트/<b>유일성</b></td><td class="mono">서버 (상태)</td><td>앱은 복제·초기화 가능</td></tr>
         <tr><td>결제·게임결과 <b>최종 판정</b></td><td class="mono">서버</td><td>클라 조작을 무력화</td></tr>
-        <tr><td>API 키 등 <b>실제 쓰는 비밀</b></td><td class="mono">서버</td><td>앱에 있으면 쓰는 순간 메모리에서 탈취됨</td></tr>
+        <tr><td>API 키 등 <b>실제 쓰는 비밀</b></td><td class="mono">서버</td><td>쓰는 순간 메모리에서 탈취됨</td></tr>
       </tbody>
     </table>
   </div>
-  <p class="note">실제로 로컬 활성화 서버를 만들어, 같은 라이선스를 3번째 기기에서 쓰려 하면 <span class="pill">409 seat 초과</span>로 막히는 것까지 확인했어요. 클라를 아무리 뜯어도 서버가 쥔 "몇 대 썼나"는 못 바꿉니다.</p>
-</section>
 
-<!-- 7. 네트워크 -->
-<section id="net">
-  <div class="eyebrow">07 / 네트워크</div>
-  <h2>앱이 밖으로 뭘 보내나 (mitmproxy)</h2>
-  <p class="sub">가운데에 프록시를 끼워 TLS를 대신 맺으면, 앱의 CA 신뢰 여부에 따라 통신이 보이거나 막힌다.</p>
-  <div class="svgcard">
-  <svg viewBox="0 0 720 150" role="img" aria-label="mitmproxy 중간자 구조">
-    <g font-family="system-ui" font-size="13" text-anchor="middle">
-      <rect x="20" y="45" width="140" height="60" rx="10" fill="var(--surface)" stroke="var(--line)"/><text x="90" y="80" fill="var(--ink)">📱 앱</text>
-      <rect x="290" y="45" width="140" height="60" rx="10" fill="var(--brand-soft)" stroke="var(--brand)"/><text x="360" y="73" fill="var(--brand)" font-weight="700">🕵️ mitmproxy</text><text x="360" y="92" fill="var(--brand)" font-size="11">여기서 평문을 봄</text>
-      <rect x="560" y="45" width="140" height="60" rx="10" fill="var(--surface)" stroke="var(--line)"/><text x="630" y="80" fill="var(--ink)">🌐 서버</text>
-      <path d="M162 75 H288" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#b)"/>
-      <path d="M432 75 H558" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#b)"/>
-      <text x="225" y="34" fill="var(--muted)" font-size="11">TLS (mitm 인증서)</text>
-      <text x="495" y="34" fill="var(--muted)" font-size="11">TLS (진짜)</text>
-      <text x="360" y="132" fill="var(--muted)" font-size="12">CA를 신뢰시키면 → URL·토큰·바디가 평문으로 보임</text>
-      <defs><marker id="b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--muted)"/></marker></defs>
-    </g>
-  </svg>
-  </div>
-  <div class="grid3" style="margin-top:16px">
-    <div class="card"><span class="badge broken">CA 신뢰 안 함</span><p class="note" style="margin-top:8px">위조 인증서라 앱이 거부 → 안 보임.</p></div>
-    <div class="card"><span class="badge safe">CA 신뢰함</span><p class="note" style="margin-top:8px">복호화되어 <span class="mono">?token=ABC123</span>까지 노출.</p></div>
-    <div class="card"><span class="badge key">SSL Pinning</span><p class="note" style="margin-top:8px">특정 인증서만 믿어 거부 → Frida로 우회.</p></div>
+  <div class="card" style="margin-top:16px">
+    <div class="row" style="justify-content:space-between"><b>왜 재사용(복사)은 서버만 막나 — 직접 보기</b><button class="btn" id="sPlay">▶ 재생</button></div>
+    <p class="note">같은 라이선스 <span class="mono">LIC-AAAA</span>를 여러 기기에서 활성화. seat 한도는 2. 서버가 "몇 대 썼나"를 기억해요.</p>
+    <div class="track" id="sTrack" style="height:132px">
+      <div class="node" id="s1" style="left:20%;top:30px"><div class="box">📱 기기1</div><div class="cap" id="s1c">대기</div></div>
+      <div class="node" id="s2" style="left:50%;top:30px"><div class="box">📱 기기2</div><div class="cap" id="s2c">대기</div></div>
+      <div class="node" id="s3" style="left:80%;top:30px"><div class="box">📱 기기3</div><div class="cap" id="s3c">대기</div></div>
+      <div class="callout" id="sCall" style="bottom:12px">서버 기록: 0 / 2대</div>
+    </div>
+    <p class="note">기기3은 <span class="pill">409 seat 초과</span>로 막혀요. 앱을 아무리 뜯어 검사를 패치해도 그 기기 하나에서만 통하지, <b>서버가 쥔 "총 몇 대"는 못 바꿉니다.</b></p>
   </div>
 </section>
 
-<!-- 8. 전체 지도 -->
-<section id="map">
-  <div class="eyebrow">08 / 전체 지도</div>
-  <h2>지금까지의 스터디 지도</h2>
-  <p class="sub">뜯기(공격)와 지키기(방어)는 같은 지식의 양면이에요.</p>
+<!-- NET -->
+<section class="panel" id="tab-net">
+  <div class="eyebrow">08 / 네트워크</div>
+  <h1 class="ptitle">앱이 밖으로 뭘 보내나 (mitmproxy)</h1>
+  <p class="psub">HTTPS는 앱과 서버 사이를 자물쇠로 잠근 통신이에요. 가운데서 읽으려면 조건이 있습니다.</p>
+
+  <div class="card">
+    <b>🔒 먼저 비유로</b>
+    <p style="margin:.6em 0 0">HTTPS = <b>봉인된 편지</b>를 주고받는 것. 중간 우체부는 못 읽어요.<br>
+    mitmproxy = 중간에 앉은 <b>우체부</b>. 편지를 열어 읽으려면, 앱이 "이 우체부의 봉인도 진짜로 인정한다"고 <b>믿어줘야</b> 합니다.<br>
+    앱이 누굴 믿는지는 <b>신뢰 목록(CA 목록)</b>에 달렸어요. 우체부가 그 목록에 없으면 → 앱이 거부 → 못 읽음.</p>
+  </div>
+
+  <div class="card">
+    <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:6px">
+      <button class="btn ghost net-b" data-s="0">① 기본</button>
+      <button class="btn ghost net-b" data-s="1">② mitm CA 설치</button>
+      <button class="btn ghost net-b" data-s="2">③ 앱에 SSL Pinning</button>
+      <button class="btn ghost net-b" data-s="3">④ Frida로 우회</button>
+    </div>
+    <div class="track" style="height:96px">
+      <div class="wire" id="netWire" style="left:16%;width:68%"></div>
+      <div class="node" style="left:16%;top:20px"><div class="box">📱 앱</div></div>
+      <div class="node" id="netMid" style="left:50%;top:20px"><div class="box">🕵️ mitmproxy</div><div class="cap" id="netLock" style="font-size:18px">🔒</div></div>
+      <div class="node" style="left:84%;top:20px"><div class="box">🌐 서버</div></div>
+    </div>
+    <div class="grid3" style="margin-top:12px">
+      <div class="card" style="box-shadow:none;padding:14px"><span class="fp-label">앱이 우체부를 신뢰?</span><div id="netTrust" style="font-weight:700;margin-top:6px">✗ 아니오</div></div>
+      <div class="card" style="box-shadow:none;padding:14px"><span class="fp-label">앱의 핀닝 검사</span><div id="netPin" style="font-weight:700;margin-top:6px">없음</div></div>
+      <div class="card" style="box-shadow:none;padding:14px"><span class="fp-label">결과</span><div id="netRes" style="font-weight:700;margin-top:6px">🔒 안 보임</div></div>
+    </div>
+    <div class="result" id="netMsg" style="margin-top:12px">① 그냥 프록시만 껴봤어요. 앱은 낯선 인증서라 거부합니다.</div>
+  </div>
+
+  <div class="card">
+    <b>SSL Pinning이 뭔데 CA를 설치해도 막히나?</b>
+    <p style="margin:.6em 0 0">보통 앱은 "신뢰 목록에 있으면 OK"예요. 그래서 mitm CA를 목록에 넣으면(②) 통과했죠.<br>
+    <b>Pinning</b>은 한 단계 더 깐깐합니다. 앱이 <b>"진짜 서버 인증서의 사진"을 미리 품고</b> 있어서,
+    목록에 있든 없든 <b>그 사진과 정확히 같은 것만</b> 받아요. mitm 인증서는 사진과 다르니 거부(③).<br>
+    우회(④)는 실행 중에 <b>Frida로 그 "사진 대조" 코드를 꺼버리는</b> 거예요. 그러면 다시 목록만 보고 통과합니다.</p>
+    <p class="note">그래서 pinning이 걸려 있다는 것 자체가 "이 통신은 특히 감추고 싶어한다"는 신호이기도 해요. 검수 때 눈여겨봅니다.</p>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="panel" id="tab-map">
+  <div class="eyebrow">09 / 전체 지도</div>
+  <h1 class="ptitle">지금까지의 스터디 지도</h1>
+  <p class="psub">뜯기(공격)와 지키기(방어)는 같은 지식의 양면이에요.</p>
   <div class="grid2">
-    <div class="card">
-      <span class="badge key">뜯기 (분석)</span>
-      <ul style="margin:.7em 0 0;padding-left:18px;color:var(--ink)">
-        <li>APK/IPA 구조 열기</li>
-        <li>jadx / Ghidra로 코드 읽기</li>
-        <li>Frida로 런타임 후킹 (키·정답 탈취)</li>
-        <li>mitmproxy로 통신 가로채기</li>
-        <li>권한·트래커·URL 정적 감사</li>
-      </ul>
+    <div class="card"><span class="badge key">뜯기 (분석)</span>
+      <ul style="margin:.7em 0 0;padding-left:18px"><li>APK/IPA 구조 열기</li><li>jadx / Ghidra로 코드 읽기</li><li>Frida로 런타임 후킹(키·정답 탈취)</li><li>mitmproxy로 통신 가로채기</li><li>권한·트래커·URL 정적 감사</li></ul>
     </div>
-    <div class="card">
-      <span class="badge safe">지키기 (방어)</span>
-      <ul style="margin:.7em 0 0;padding-left:18px;color:var(--ink)">
-        <li>난독화·네이티브·안티디버깅 (시간 벌기)</li>
-        <li>해시/KDF로 정답 원본 없애기</li>
-        <li>공개키 서명으로 위조 차단</li>
-        <li>서버로 발급·유일성·최종판정 이관</li>
-        <li>SSL Pinning으로 통신 보호</li>
-      </ul>
+    <div class="card"><span class="badge safe">지키기 (방어)</span>
+      <ul style="margin:.7em 0 0;padding-left:18px"><li>난독화·네이티브·안티디버깅(시간벌기)</li><li>해시/KDF로 정답 원본 없애기</li><li>공개키 서명으로 위조 차단</li><li>서버로 발급·유일성·최종판정 이관</li><li>SSL Pinning으로 통신 보호</li></ul>
     </div>
   </div>
-  <div class="thesis" style="margin-top:24px">다시 한 줄 &mdash; 방어는 <b>비용을 올릴</b> 뿐 완벽하지 않다. 그래서 진짜 중요한 비밀은
+  <div class="thesis" style="margin-top:20px">다시 한 줄 &mdash; 방어는 <b>비용을 올릴</b> 뿐 완벽하지 않다. 그래서 진짜 중요한 비밀은
   <b>클라이언트에 두지 않는다.</b> 확인용은 KDF로 없애고, 사용·판정은 서버로.</div>
 </section>
 
-<footer>
-  <div>모바일 앱 리버싱 개인 스터디 · 정적/동적 분석과 방어 설계 · OWASP 공개 샘플과 직접 만든 데모로 실습</div>
-</footer>
-
+</div></main>
 </div>
 
 <script>
 (function(){
-  // 아주 단순한 "서명" 시뮬레이션: 내용의 지문(간이 해시)을 개인키(고정 비밀)와 섞어 서명을 만든다.
-  // 검증은 현재 내용으로 다시 계산해 서명과 대조. 내용이 바뀌면 불일치 -> 실패.
-  var PRIV = 20260822; // 개인키(시뮬레이션)
-  function fp(s){ var h=2166136261; for(var i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=(h*16777619)>>>0; } return h>>>0; }
-  function sign(s){ return ((fp(s)^PRIV)>>>0).toString(16).padStart(8,'0'); }
-  var sig=null, msgEl=document.getElementById('msg'), out=document.getElementById('out');
-  function set(t,cls){ out.textContent=t; out.className='result'+(cls?' '+cls:''); }
-  document.getElementById('sign').onclick=function(){
-    sig=sign(msgEl.value);
-    set('🔑 서명 생성됨: '+sig+'  (개인키로만 만들 수 있음)');
-  };
-  document.getElementById('verify').onclick=function(){
-    if(sig===null){ set('먼저 서명을 만들어 주세요.'); return; }
-    if(sign(msgEl.value)===sig) set('✓ 검증 성공 — 진짜이고 내용이 그대로입니다.','ok');
-    else set('✗ 검증 실패 — 내용이 바뀌었거나 서명이 안 맞습니다.','bad');
-  };
-  document.getElementById('tamper').onclick=function(){
-    msgEl.value = msgEl.value.replace('pro','ENTERPRISE');
-    set('✂️ 내용을 몰래 바꿨습니다. 이제 "검증"을 눌러보세요 → 실패할 거예요.');
-  };
+  var RM = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var wait = function(ms){ return new Promise(function(r){ setTimeout(r, RM?0:ms); }); };
+
+  /* ---- 탭 전환 ---- */
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  var ids=tabs.map(function(t){return t.dataset.tab;});
+  function show(id){
+    if(ids.indexOf(id)<0) id='home';
+    tabs.forEach(function(t){t.classList.toggle('active',t.dataset.tab===id);});
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('show',p.id==='tab-'+id);});
+    try{history.replaceState(null,'','#'+id);}catch(e){}
+    var m=document.querySelector('main'); if(m) m.scrollTop=0; window.scrollTo(0,0);
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.tab);});});
+  show((location.hash||'#home').slice(1));
+
+  /* ---- 서명 데모: 지문 ---- */
+  function fp(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=(h*16777619)>>>0;}return (h>>>0).toString(16).slice(0,6).toUpperCase();}
+  var msg=document.getElementById('msg'), now=document.getElementById('fpNowVal'),
+      seal=document.getElementById('fpSealVal'), eq=document.getElementById('fpEq'),
+      bNow=document.getElementById('fpNow'), bSeal=document.getElementById('fpSeal'),
+      out=document.getElementById('out'), sealed=null;
+  function setRes(t,c){out.textContent=t;out.className='result'+(c?' '+c:'');}
+  function refresh(){ now.textContent=fp(msg.value);
+    bNow.classList.remove('match','miss'); bSeal.classList.remove('match','miss'); eq.textContent='?'; }
+  if(msg){
+    refresh(); msg.addEventListener('input',refresh);
+    document.getElementById('sign').onclick=function(){
+      sealed=fp(msg.value); seal.textContent=sealed; seal.classList.remove('stamp');void seal.offsetWidth;seal.classList.add('stamp');
+      setRes('🔑 봉인에 '+sealed+' 를 새겼어요. 이제 검증해보세요.'); eq.textContent='?';
+      bNow.classList.remove('match','miss'); bSeal.classList.remove('match','miss');
+    };
+    document.getElementById('verify').onclick=function(){
+      if(sealed===null){ setRes('먼저 "서명"을 눌러 봉인을 만들어 주세요.'); return; }
+      var same=fp(msg.value)===sealed;
+      eq.textContent= same?'=':'≠';
+      bNow.classList.toggle('match',same); bNow.classList.toggle('miss',!same);
+      bSeal.classList.toggle('match',same); bSeal.classList.toggle('miss',!same);
+      if(same) setRes('✓ 검증 성공 — 지문이 같아요. 진짜이고 내용이 그대로.','ok');
+      else setRes('✗ 검증 실패 — 지문이 달라요. 내용이 바뀌었어요.','bad');
+    };
+    document.getElementById('tamper').onclick=function(){
+      msg.value=msg.value.replace('pro','ENTERPRISE'); refresh();
+      setRes('✂️ 내용을 몰래 바꿨어요. "지금 지문"이 달라졌죠? 이제 검증하면 실패해요.');
+    };
+  }
+
+  /* ---- XOR 애니메이션 ---- */
+  var word="UNLOCK", xkey=0x2a;
+  var encRow=document.getElementById('xorEnc'), outRow=document.getElementById('xorOut');
+  function buildXor(){
+    encRow.innerHTML=''; outRow.innerHTML='';
+    for(var i=0;i<word.length;i++){
+      var e=document.createElement('div'); e.className='cell enc';
+      e.textContent=(word.charCodeAt(i)^xkey).toString(16).padStart(2,'0'); encRow.appendChild(e);
+      var o=document.createElement('div'); o.className='cell out'; o.textContent='·'; outRow.appendChild(o);
+    }
+  }
+  if(encRow){ buildXor();
+    document.getElementById('xorPlay').onclick=async function(){
+      buildXor();
+      var encs=encRow.children, outs=outRow.children;
+      for(var i=0;i<word.length;i++){
+        encs[i].classList.add('active'); await wait(260);
+        outs[i].textContent=word[i]; outs[i].classList.add('reveal');
+        encs[i].classList.remove('active'); await wait(120);
+      }
+      setTimeout(function(){for(var i=0;i<word.length;i++)outs[i].classList.remove('reveal');},1400);
+    };
+  }
+
+  /* ---- 공통 dot 이동 ---- */
+  function runDot(dot, fromPct, toPct, ms){
+    return new Promise(function(res){
+      dot.style.transition='none'; dot.style.left=fromPct+'%'; dot.style.opacity='1';
+      void dot.offsetWidth;
+      dot.style.transition='left '+(RM?0:ms)+'ms ease'; dot.style.left=toPct+'%';
+      setTimeout(res, RM?0:ms);
+    });
+  }
+
+  /* ---- Frida 애니메이션 ---- */
+  var fPlay=document.getElementById('fPlay');
+  if(fPlay){ fPlay.onclick=async function(){
+    var mid=document.getElementById('fMid'),end=document.getElementById('fEnd'),endBox=document.getElementById('fEndBox'),
+        dot=document.getElementById('fDot'),call=document.getElementById('fCall');
+    mid.classList.remove('on');end.classList.remove('ok');call.classList.remove('show');
+    endBox.textContent='🔒 잠김'; dot.style.opacity='0';
+    await runDot(dot,16,50,900); mid.classList.add('on'); call.classList.add('show'); await wait(700);
+    await runDot(dot,50,84,900); end.classList.add('ok'); endBox.textContent='🔓 열림'; dot.style.opacity='0';
+  };}
+
+  /* ---- mitm 애니메이션 ---- */
+  var mPlay=document.getElementById('mPlay');
+  if(mPlay){ mPlay.onclick=async function(){
+    var mid=document.getElementById('mMid'),dot=document.getElementById('mDot'),call=document.getElementById('mCall');
+    mid.classList.remove('on');call.classList.remove('show');dot.style.opacity='0';
+    await runDot(dot,16,50,850); mid.classList.add('on'); call.classList.add('show'); await wait(800);
+    await runDot(dot,50,84,850); dot.style.opacity='0';
+  };}
+
+  /* ---- seat 애니메이션 ---- */
+  var sPlay=document.getElementById('sPlay');
+  if(sPlay){ sPlay.onclick=async function(){
+    var call=document.getElementById('sCall');
+    [['s1','s1c'],['s2','s2c'],['s3','s3c']].forEach(function(p){document.getElementById(p[0]).classList.remove('ok','bad');document.getElementById(p[1]).textContent='대기';});
+    call.classList.add('show'); call.textContent='서버 기록: 0 / 2대'; await wait(500);
+    document.getElementById('s1').classList.add('ok'); document.getElementById('s1c').textContent='✓ 활성화'; call.textContent='서버 기록: 1 / 2대'; await wait(800);
+    document.getElementById('s2').classList.add('ok'); document.getElementById('s2c').textContent='✓ 활성화'; call.textContent='서버 기록: 2 / 2대 (꽉 참)'; await wait(800);
+    document.getElementById('s3').classList.add('bad'); document.getElementById('s3c').textContent='✗ 409 거부'; call.textContent='서버가 3번째를 막음 → 복사 방지';
+  };}
+
+  /* ---- 네트워크 4상태 스텝퍼 ---- */
+  var netStates=[
+   {trust:'✗ 아니오', pin:'없음', res:'🔒 안 보임', lock:'🔒', cls:'bad', msg:'① 그냥 프록시만 껴봤어요. 앱은 낯선(위조) 인증서라 거부합니다.'},
+   {trust:'✓ 예 (목록에 추가됨)', pin:'없음', res:'🔓 평문 보임', lock:'🔓', cls:'ok', msg:'② mitm CA를 신뢰 목록에 넣었어요. 우체부 봉인을 인정 → 편지를 읽습니다. token까지 노출.'},
+   {trust:'✓ 예', pin:'있음 (막음)', res:'🔒 안 보임', lock:'🔒', cls:'bad', msg:'③ 앱이 "진짜 서버 인증서 사진"과 대조. mitm 인증서는 사진과 달라 거부합니다. CA를 넣어도 소용없음.'},
+   {trust:'✓ 예', pin:'우회됨', res:'🔓 평문 보임', lock:'🔓', cls:'ok', msg:'④ Frida로 "사진 대조" 코드를 실행 중에 껐어요. 다시 목록만 보고 통과 → 읽힙니다.'}
+  ];
+  var netBtns=[].slice.call(document.querySelectorAll('.net-b'));
+  function setNet(i){
+    var s=netStates[i];
+    document.getElementById('netTrust').textContent=s.trust;
+    document.getElementById('netPin').textContent=s.pin;
+    document.getElementById('netRes').textContent=s.res;
+    document.getElementById('netLock').textContent=s.lock;
+    document.getElementById('netMsg').textContent=s.msg;
+    var mid=document.getElementById('netMid'); mid.classList.remove('on','ok','bad'); mid.classList.add(s.cls);
+    var wire=document.getElementById('netWire'); wire.style.background=(s.cls==='ok')?'var(--safe)':'var(--broken)';
+    netBtns.forEach(function(b,idx){ b.classList.toggle('ghost', idx!==i); });
+  }
+  if(netBtns.length){ netBtns.forEach(function(b){ b.addEventListener('click',function(){ setNet(+b.dataset.s); }); }); setNet(0); }
 })();
 </script>
