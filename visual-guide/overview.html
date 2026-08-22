@@ -1,0 +1,162 @@
+<title>리버싱 스터디 성과 대시보드</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#eef1f6;--surface:#ffffff;--surface2:#f6f8fc;--ink:#14172a;--muted:#5b6178;
+  --line:#d9dfec;--brand:#3a55d9;--brand-soft:#e7ebfe;--key:#c9791a;--key-soft:#fbeecf;
+  --safe:#0f8a57;--safe-soft:#dbf3e6;--broken:#cf3f58;--broken-soft:#fbe2e7;--warn:#b5820a;--warn-soft:#fbf1d4;
+  --shadow:0 1px 2px rgba(20,23,42,.06),0 8px 24px rgba(20,23,42,.06);
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c0e18;--surface:#151827;--surface2:#1b2033;--ink:#e8eaf4;--muted:#9aa1bd;
+  --line:#272c43;--brand:#8093ff;--brand-soft:#1f2547;--key:#e7a94c;--key-soft:#2a2413;
+  --safe:#41cf93;--safe-soft:#123227;--broken:#ff6f86;--broken-soft:#331721;--warn:#e7b84c;--warn-soft:#2a2413;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#0c0e18;--surface:#151827;--surface2:#1b2033;--ink:#e8eaf4;--muted:#9aa1bd;
+  --line:#272c43;--brand:#8093ff;--brand-soft:#1f2547;--key:#e7a94c;--key-soft:#2a2413;
+  --safe:#41cf93;--safe-soft:#123227;--broken:#ff6f86;--broken-soft:#331721;--warn:#e7b84c;--warn-soft:#2a2413;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+a{color:var(--brand)} code,.mono{font-family:var(--mono)}
+h1,h2{text-wrap:balance;letter-spacing:-.02em}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);font-weight:600}
+header{padding:56px 0 30px}
+header h1{font-size:clamp(28px,5vw,46px);font-weight:800;margin:.25em 0 .2em;letter-spacing:-.03em}
+header p{color:var(--muted);font-size:18px;max-width:56ch;margin:0}
+section{padding:26px 0}
+h2{font-size:22px;font-weight:800;margin:0 0 4px}
+.sec-sub{color:var(--muted);font-size:14px;margin:0 0 16px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.stat .num{font-size:32px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat .lab{color:var(--muted);font-size:13px;margin-top:2px}
+.stat.a .num{color:var(--brand)} .stat.b .num{color:var(--safe)} .stat.c .num{color:var(--key)} .stat.d .num{color:var(--ink)}
+
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:flex-start;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+.item .ic{font-size:16px;flex:none;margin-top:1px}
+.item .body{flex:1;min-width:0}
+.item .body b{display:block}
+.item .body span{font-size:13px;color:var(--muted)}
+.pill{font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;flex:none;white-space:nowrap}
+.pill.done{background:var(--safe-soft);color:var(--safe)}
+.pill.part{background:var(--warn-soft);color:var(--warn)}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface2);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+tr:last-child td{border-bottom:none}
+td .mono{font-size:12px}
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:6px;background:var(--brand-soft);color:var(--brand)}
+
+.ladder{display:flex;flex-direction:column;gap:8px}
+.rung{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px 14px}
+.rung .n{font-family:var(--mono);font-weight:700;color:var(--muted);width:18px;flex:none}
+.rung .t{flex:1}.rung .t b{display:block}.rung .t span{font-size:12.5px;color:var(--muted)}
+.rung .r{font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;flex:none}
+.r.broke{background:var(--broken-soft);color:var(--broken)} .r.hold{background:var(--safe-soft);color:var(--safe)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.card h3{margin:.1em 0 .5em;font-size:15px}
+.card ul{margin:.3em 0 0;padding-left:18px} .card li{margin:2px 0;font-size:14px}
+.thesis{margin-top:8px;padding:20px 22px;border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:14px;background:var(--surface);box-shadow:var(--shadow);font-size:17px}
+.thesis b{color:var(--brand)}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:6px;padding:11px 18px;border-radius:11px;background:var(--brand);color:#fff;text-decoration:none;font-weight:700;font-size:14px}
+footer{padding:36px 0 64px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:20px}
+@media(max-width:760px){.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Mobile App Reverse Engineering · Study Portfolio</div>
+  <h1>모바일 앱 리버싱 스터디, 한눈에</h1>
+  <p>APK/IPA를 뜯어보고, 직접 난독화한 앱을 다시 크랙하고, "그럼 어떻게 지키나"까지 만들어본 개인 스터디 요약.</p>
+</header>
+
+<section>
+  <div class="stats">
+    <div class="stat a"><div class="num">8/8</div><div class="lab">로드맵 주제 완료</div></div>
+    <div class="stat b"><div class="num">5</div><div class="lab">크랙미 (L1~L4·License)</div></div>
+    <div class="stat c"><div class="num">6+</div><div class="lab">캡스톤 build↔crack 라운드</div></div>
+    <div class="stat d"><div class="num">2</div><div class="lab">플랫폼 (Android · iOS)</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>로드맵 진행</h2>
+  <p class="sec-sub">8개 주제를 개념 정리 → 직접 실습 → 기록 순으로.</p>
+  <div class="list">
+    <div class="item"><span class="ic">📦</span><div class="body"><b>APK/빌드 산출물</b><span>DEX·AAB·리소스·서명 v1~v4</span></div><span class="pill done">완료</span></div>
+    <div class="item"><span class="ic">🔧</span><div class="body"><b>Android 도구 (jadx·apktool·Frida)</b><span>UnCrackable L1 정적+동적</span></div><span class="pill done">완료</span></div>
+    <div class="item"><span class="ic">🍎</span><div class="body"><b>iOS Mach-O 분석</b><span>otool·nm·Ghidra·Frida (실기기/IPA는 심화)</span></div><span class="pill done">완료</span></div>
+    <div class="item"><span class="ic">🌀</span><div class="body"><b>난독화·보호 기법</b><span>R8/ProGuard·Allatori·DexGuard 비교</span></div><span class="pill done">완료</span></div>
+    <div class="item"><span class="ic">🕵️</span><div class="body"><b>네트워크 분석 (mitmproxy)</b><span>HTTPS 가로채기·SSL Pinning (A14 CA는 심화)</span></div><span class="pill done">완료</span></div>
+    <div class="item"><span class="ic">📜</span><div class="body"><b>플랫폼 심사 정책</b><span>apk-audit.py로 권한·트래커·URL 정적 감사</span></div><span class="pill done">완료</span></div>
+    <div class="item"><span class="ic">🐦</span><div class="body"><b>Flutter/Hybrid 바이너리</b><span>프레임워크 감지·Dart 스냅샷·프록시 우회</span></div><span class="pill done">완료</span></div>
+    <div class="item"><span class="ic">🎯</span><div class="body"><b>샘플 앱 정적/동적 실습</b><span>L1~L3·License keygen·L4 정찰</span></div><span class="pill done">완료</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>크랙미 성과</h2>
+  <p class="sec-sub">OWASP 공개 샘플 + 직접 만든 데모. 결과는 공개 답이거나 내 데모 값.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>대상</th><th>핵심 보호</th><th>뚫은 방법</th><th>결과</th></tr></thead>
+    <tbody>
+      <tr><td>UnCrackable L1</td><td>AES로 정답 암호화(Java)</td><td>jadx → openssl 복호화</td><td class="mono">I want to believe</td></tr>
+      <tr><td>UnCrackable L2</td><td>네이티브(.so) 검증</td><td>Ghidra로 조각 조립</td><td class="mono">Thanks for all the fish</td></tr>
+      <tr><td>UnCrackable L3</td><td>네이티브+CRC 변조탐지</td><td>Ghidra + 암호문 역산</td><td class="mono">making owasp great again</td></tr>
+      <tr><td>License_01</td><td>keygen (base32 검증식)</td><td>검증식 리버싱 → 키 생성</td><td class="mono">JQAE6ACMABNAAIIA</td></tr>
+      <tr><td>L4 r2pay</td><td>네이티브 다중보호+RootBeer</td><td>정찰 + 탐지층 규명</td><td><span class="tag">정찰 완료</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>캡스톤 — 직접 난독화하고 다시 크랙</h2>
+  <p class="sec-sub">방어를 한 층씩 올리며 매번 다시 뚫었다. 결과 태그로 표시.</p>
+  <div class="ladder">
+    <div class="rung"><span class="n">1</span><div class="t"><b>네이티브(.so) + XOR 문자열 암호화</b><span>-O2 상수폴딩으로 평문 누수 → volatile로 수정</span></div><span class="r broke">Ghidra로 복원</span></div>
+    <div class="rung"><span class="n">2</span><div class="t"><b>ptrace 안티디버깅 + 심볼 스트립</b><span>정적 분석엔 무의미</span></div><span class="r broke">읽어서 우회</span></div>
+    <div class="rung"><span class="n">3</span><div class="t"><b>컨트롤 플로우 평탄화</b><span>흐름은 꼬였지만 데이터는 그대로</span></div><span class="r broke">데이터만 추출</span></div>
+    <div class="rung"><span class="n">4</span><div class="t"><b>런타임 키 유도(LCG)</b><span>정적키 제거</span></div><span class="r broke">Frida로 런타임 탈취</span></div>
+    <div class="rung"><span class="n">5</span><div class="t"><b>해시 검증(SHA-256)</b><span>정답 원본을 안 둠</span></div><span class="r hold">정적·동적 방어</span></div>
+    <div class="rung"><span class="n">6</span><div class="t"><b>강한 정답 + salt + PBKDF2 20만회</b><span>brute-force 약 10³⁸년</span></div><span class="r hold">사실상 못 뚫음</span></div>
+    <div class="rung"><span class="n">＋</span><div class="t"><b>공개키 서명 + 로컬 활성화 서버</b><span>위조 차단 + seat 초과로 재사용 방지</span></div><span class="r hold">서버가 판정</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>만든 도구</h2>
+  <div class="grid2">
+    <div class="card"><h3>🔎 분석 도구</h3><ul>
+      <li><b>apk-audit.py</b> — 권한·트래커·URL·프레임워크 정적 감사</li>
+      <li><b>Ghidra 스크립트</b> — 함수 디컴파일·바이트 덤프</li>
+      <li><b>Frida 훅</b> — CCCrypt 키 탈취·memcmp·ptrace 우회</li>
+    </ul></div>
+    <div class="card"><h3>🛡️ 방어 데모</h3><ul>
+      <li><b>캡스톤 크랙미</b> — Android(.so)·iOS(Mach-O) 6종</li>
+      <li><b>활성화 서버</b> — seat 기반 재사용 방지(로컬)</li>
+      <li><b>서명 데모</b> — Ed25519 발급·검증·위조 실패</li>
+    </ul></div>
+  </div>
+</section>
+
+<section>
+  <h2>핵심 결론</h2>
+  <div class="thesis"><b>클라이언트(앱)에 "있는" 비밀은 결국 다 나온다.</b> 난독화는 비용을 올릴 뿐 완벽하지 않다.
+  확인만 하면 되는 비밀은 <b>KDF로 원본을 없애고</b>, 실제로 써야 하거나 최종 판정이 필요한 건 <b>서버로</b> 옮긴다.</div>
+  <a class="cta" href="index.html">🎬 개념 설명서(그림·애니메이션) 보기 →</a>
+</section>
+
+<footer>모바일 앱 리버싱 개인 스터디 · 정적/동적 분석과 방어 설계 · 개인정보 없이 공개 샘플과 직접 만든 데모로 실습</footer>
+</div>
