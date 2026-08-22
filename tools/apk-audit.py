@@ -76,6 +76,28 @@ def main(apk):
         mark = "  [위험]" if p in DANGEROUS else ""
         print(f"  - {p}{mark}")
 
+    # 파일 목록 (프레임워크 감지에 사용)
+    try:
+        with zipfile.ZipFile(apk) as z: names = z.namelist()
+    except Exception: names = []
+    def has(sub): return any(sub in n for n in names)
+
+    print("\n## 앱 프레임워크 감지 (코드가 어디 있나)")
+    fw = []
+    if has("libflutter.so") or has("flutter_assets/") or has("libapp.so"):
+        fw.append("Flutter — 코드는 Dart AOT 스냅샷(lib/*/libapp.so). jadx 무의미, blutter/reFlutter 필요")
+    if has("index.android.bundle") or has("libreactnativejni.so") or has("libhermes"):
+        fw.append("React Native — 로직은 assets/index.android.bundle(JS/Hermes). JS 번들 분석")
+    if has("assets/www/") or has("cordova.js"):
+        fw.append("Cordova/Ionic(하이브리드) — 로직은 assets/www의 HTML/JS")
+    if has("libmonodroid.so") or has("assemblies/"):
+        fw.append(".NET/Xamarin/MAUI — 로직은 .NET 어셈블리(assemblies/). dnSpy/ILSpy")
+    if has("libunity.so") or has("bin/Data/"):
+        fw.append("Unity — 로직은 IL2CPP(libil2cpp.so) 또는 Mono 어셈블리")
+    if not fw:
+        fw.append("네이티브 Java/Kotlin (기본) — classes.dex가 주 코드 → jadx로 분석")
+    for f in fw: print(f"  - {f}")
+
     print("\n## exported 컴포넌트 (공격면)")
     exported = re.findall(r"E: (activity|service|receiver|provider).*?name.*?='([^']+)'", mani)
     # 간단 신호: launchable-activity + provider
