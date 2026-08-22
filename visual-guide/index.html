@@ -1,0 +1,394 @@
+<title>모바일 리버싱 비주얼 가이드</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#eef1f6; --surface:#ffffff; --surface2:#f6f8fc; --ink:#14172a; --muted:#5b6178;
+  --line:#d9dfec; --brand:#3a55d9; --brand-soft:#e7ebfe; --key:#c9791a; --key-soft:#fbeecf;
+  --safe:#0f8a57; --safe-soft:#dbf3e6; --broken:#cf3f58; --broken-soft:#fbe2e7;
+  --shadow:0 1px 2px rgba(20,23,42,.06),0 8px 24px rgba(20,23,42,.06);
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c0e18; --surface:#151827; --surface2:#1b2033; --ink:#e8eaf4; --muted:#9aa1bd;
+  --line:#272c43; --brand:#8093ff; --brand-soft:#1f2547; --key:#e7a94c; --key-soft:#2a2413;
+  --safe:#41cf93; --safe-soft:#123227; --broken:#ff6f86; --broken-soft:#331721;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#0c0e18; --surface:#151827; --surface2:#1b2033; --ink:#e8eaf4; --muted:#9aa1bd;
+  --line:#272c43; --brand:#8093ff; --brand-soft:#1f2547; --key:#e7a94c; --key-soft:#2a2413;
+  --safe:#41cf93; --safe-soft:#123227; --broken:#ff6f86; --broken-soft:#331721;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+a{color:var(--brand)}
+h1,h2,h3{text-wrap:balance;line-height:1.2}
+code,.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);font-weight:600}
+
+/* top bar */
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;height:56px}
+.brandmark{font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.brandmark b{color:var(--brand)}
+nav.links{display:flex;gap:4px;margin-left:auto;overflow-x:auto}
+nav.links a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:8px;white-space:nowrap}
+nav.links a:hover{background:var(--brand-soft);color:var(--brand)}
+
+/* hero */
+.hero{padding:64px 0 40px}
+.hero h1{font-size:clamp(30px,6vw,52px);font-weight:800;letter-spacing:-.03em;margin:.3em 0 .35em}
+.hero p.lead{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:44ch;margin:0}
+.thesis{margin-top:34px;padding:22px 24px;border:1px solid var(--line);border-left:4px solid var(--brand);
+  border-radius:14px;background:var(--surface);box-shadow:var(--shadow);font-size:17px}
+.thesis b{color:var(--brand)}
+
+section{padding:40px 0;border-top:1px solid var(--line)}
+section h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;letter-spacing:-.02em;margin:.2em 0 .1em}
+section .sub{color:var(--muted);margin:.2em 0 1.6em;max-width:60ch}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;font-family:var(--mono);
+  padding:3px 9px;border-radius:999px;border:1px solid transparent}
+.badge.broken{background:var(--broken-soft);color:var(--broken);border-color:color-mix(in srgb,var(--broken) 30%,transparent)}
+.badge.safe{background:var(--safe-soft);color:var(--safe);border-color:color-mix(in srgb,var(--safe) 30%,transparent)}
+.badge.key{background:var(--key-soft);color:var(--key);border-color:color-mix(in srgb,var(--key) 30%,transparent)}
+
+figure{margin:0}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
+svg{display:block;max-width:100%;height:auto}
+.svgcard{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:18px}
+
+table{width:100%;border-collapse:collapse;font-size:14px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+tr:last-child td{border-bottom:none}
+td .mono{font-size:12.5px}
+
+/* ladder */
+.ladder{display:flex;flex-direction:column;gap:10px}
+.rung{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.rung .n{font-family:var(--mono);font-weight:700;color:var(--muted);width:22px;flex:none}
+.rung .t{flex:1}
+.rung .t b{display:block}
+.rung .t span{font-size:13px;color:var(--muted)}
+
+/* key demo */
+.demo{display:grid;grid-template-columns:1fr;gap:14px}
+.demo .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.demo label{font-size:13px;color:var(--muted);font-weight:600}
+.demo input{flex:1;min-width:200px;font-family:var(--mono);font-size:14px;padding:10px 12px;border:1px solid var(--line);
+  border-radius:10px;background:var(--surface2);color:var(--ink)}
+.btn{font-family:var(--sans);font-weight:700;font-size:14px;padding:10px 16px;border-radius:10px;border:1px solid transparent;
+  cursor:pointer;background:var(--brand);color:#fff}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.result{font-family:var(--mono);font-size:14px;padding:12px 14px;border-radius:10px;border:1px dashed var(--line);color:var(--muted);min-height:20px}
+.result.ok{color:var(--safe);border-color:var(--safe);background:var(--safe-soft);border-style:solid}
+.result.bad{color:var(--broken);border-color:var(--broken);background:var(--broken-soft);border-style:solid}
+
+.note{font-size:13px;color:var(--muted);margin-top:12px}
+footer{padding:44px 0 70px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+.pill{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:6px;background:var(--brand-soft);color:var(--brand)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="brandmark">🔓 리버싱 <b>비주얼 노트</b></div>
+  <nav class="links">
+    <a href="#pkg">앱 구조</a><a href="#code">코드 형태</a><a href="#analysis">분석</a>
+    <a href="#hide">비밀 숨기기</a><a href="#key">공개키/개인키</a><a href="#server">클라 vs 서버</a>
+    <a href="#net">네트워크</a><a href="#map">전체 지도</a>
+  </nav>
+</div></header>
+
+<div class="wrap">
+
+<section class="hero" style="border-top:none">
+  <div class="eyebrow">Mobile App Reverse Engineering</div>
+  <h1>앱을 뜯어보며 배운 것들, 그림으로</h1>
+  <p class="lead">APK를 여는 것부터, 비밀을 숨기고 다시 뚫는 것까지. 어려운 말 없이 그림으로 정리했어요.</p>
+  <div class="thesis">한 줄 결론 먼저 &mdash; <b>클라이언트(앱) 안에 "있는" 비밀은 결국 다 나온다.</b>
+  숨기는 기술은 시간을 벌 뿐이고, 정말 지키려면 비밀을 아예 앱에 두지 않아야 한다.</div>
+</section>
+
+<!-- 1. 앱 구조 -->
+<section id="pkg">
+  <div class="eyebrow">01 / 패키지</div>
+  <h2>앱은 사실 압축파일(ZIP)이다</h2>
+  <p class="sub">안드로이드 APK도, 아이폰 IPA도 확장자만 다른 ZIP이에요. 풀면 부품들이 나옵니다.</p>
+  <div class="svgcard">
+  <svg viewBox="0 0 720 220" role="img" aria-label="APK와 IPA 내부 구조">
+    <g font-family="system-ui" font-size="13">
+      <!-- APK -->
+      <rect x="10" y="20" width="330" height="180" rx="12" fill="var(--surface)" stroke="var(--line)"/>
+      <text x="28" y="45" font-weight="700" fill="var(--ink)">📦 APK (안드로이드)</text>
+      <rect x="28" y="58" width="294" height="30" rx="7" fill="var(--brand-soft)"/><text x="40" y="78" fill="var(--brand)">AndroidManifest.xml · 권한/구성</text>
+      <rect x="28" y="94" width="294" height="30" rx="7" fill="var(--key-soft)"/><text x="40" y="114" fill="var(--key)">classes.dex · 코드(바이트코드)</text>
+      <rect x="28" y="130" width="294" height="30" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="40" y="150" fill="var(--ink)">resources.arsc · res/ · 리소스</text>
+      <rect x="28" y="166" width="294" height="26" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="40" y="184" fill="var(--muted)">lib/*.so · 네이티브 · META-INF/ 서명</text>
+      <!-- IPA -->
+      <rect x="380" y="20" width="330" height="180" rx="12" fill="var(--surface)" stroke="var(--line)"/>
+      <text x="398" y="45" font-weight="700" fill="var(--ink)">📦 IPA (아이폰)</text>
+      <rect x="398" y="58" width="294" height="30" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="410" y="78" fill="var(--ink)">Payload/앱.app/</text>
+      <rect x="418" y="94" width="274" height="30" rx="7" fill="var(--key-soft)"/><text x="430" y="114" fill="var(--key)">앱 (Mach-O) · 코드(기계어)</text>
+      <rect x="418" y="130" width="274" height="26" rx="7" fill="var(--surface2)" stroke="var(--line)"/><text x="430" y="148" fill="var(--muted)">Info.plist · 리소스</text>
+      <text x="398" y="184" fill="var(--broken)">＋ App Store 앱은 FairPlay로 암호화됨</text>
+    </g>
+  </svg>
+  </div>
+  <p class="note">노란 칸이 "실제 코드"예요. 여기가 분석의 핵심입니다. 안드로이드는 <code>classes.dex</code>, 아이폰은 <code>Mach-O</code>.</p>
+</section>
+
+<!-- 2. 코드 형태 -->
+<section id="code">
+  <div class="eyebrow">02 / 코드 형태</div>
+  <h2>안드로이드는 "반쯤 사람 글", 아이폰은 "기계어"</h2>
+  <p class="sub">같은 리버싱인데 난이도가 다른 이유는 코드가 만들어지는 방식이 다르기 때문이에요.</p>
+  <div class="grid2">
+    <div class="card">
+      <span class="badge key">Android · DEX</span>
+      <h3 style="margin:.5em 0">바이트코드 → jadx로 되돌림</h3>
+      <p style="color:var(--muted);margin:.2em 0 1em">이름·구조가 많이 남아서 <b>Java 소스에 가깝게</b> 복원돼요. 읽기 쉬움.</p>
+      <pre class="mono" style="background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;font-size:12.5px;margin:0">if (a.a(input)) {
+    setTitle("Success!");
+}</pre>
+    </div>
+    <div class="card">
+      <span class="badge key">iOS · Mach-O</span>
+      <h3 style="margin:.5em 0">기계어 → Ghidra로 "의사 C"</h3>
+      <p style="color:var(--muted);margin:.2em 0 1em">소스로 못 되돌려요. 디스어셈블/디컴파일러를 <b>한 겹 더</b> 거칩니다.</p>
+      <pre class="mono" style="background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;font-size:12.5px;margin:0">mov  x8, #0xf
+ldr  x0, [x9]
+bl   _strcmp   ; ← 어셈블리</pre>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 분석 -->
+<section id="analysis">
+  <div class="eyebrow">03 / 분석 두 방식</div>
+  <h2>안 켜고 읽기(정적) vs 켜고 훔쳐보기(동적)</h2>
+  <p class="sub">비밀을 아무리 숨겨도, 앱이 실제로 쓰려면 언젠가 메모리에 평문으로 뜬다. 그 순간을 노린다.</p>
+  <div class="svgcard">
+  <svg viewBox="0 0 720 210" role="img" aria-label="정적 분석과 동적 분석 비교">
+    <g font-family="system-ui" font-size="13">
+      <rect x="10" y="16" width="340" height="178" rx="12" fill="var(--surface)" stroke="var(--line)"/>
+      <text x="30" y="42" font-weight="700" fill="var(--brand)">🔍 정적 분석</text>
+      <text x="30" y="66" fill="var(--muted)">앱을 실행하지 않고 파일을 읽음</text>
+      <text x="30" y="92" fill="var(--ink)">도구: unzip · jadx · Ghidra · otool</text>
+      <text x="30" y="118" fill="var(--ink)">잡는 것: 코드 로직, 하드코딩 값</text>
+      <text x="30" y="150" fill="var(--safe)">✓ 안전(실행 안 함) · 안티디버깅 무의미</text>
+      <text x="30" y="174" fill="var(--muted)">한계: 런타임에만 생기는 값은 못 봄</text>
+
+      <rect x="370" y="16" width="340" height="178" rx="12" fill="var(--surface)" stroke="var(--line)"/>
+      <text x="390" y="42" font-weight="700" fill="var(--key)">⚡ 동적 분석 (Frida)</text>
+      <text x="390" y="66" fill="var(--muted)">실행 중 프로세스에 끼어들어 후킹</text>
+      <text x="390" y="92" fill="var(--ink)">함수 가로채기 · 인자/반환값 조작</text>
+      <text x="390" y="118" fill="var(--ink)">잡는 것: 복호화된 평문, 키, 통신</text>
+      <text x="390" y="150" fill="var(--broken)">예) 복호화 직후 memcmp 후킹 → 정답</text>
+      <text x="390" y="174" fill="var(--muted)">환경: 에뮬레이터 / 탈옥·시뮬레이터</text>
+    </g>
+  </svg>
+  </div>
+</section>
+
+<!-- 4. 비밀 숨기기 사다리 -->
+<section id="hide">
+  <div class="eyebrow">04 / 비밀 숨기기</div>
+  <h2>숨기는 강도 사다리 &mdash; 그리고 어디서 뚫리나</h2>
+  <p class="sub">직접 만든 앱에 방어를 한 층씩 올리고 매번 다시 뚫어봤어요. 결과를 badge로 표시했습니다.</p>
+  <div class="ladder">
+    <div class="rung"><span class="n">1</span><div class="t"><b>평문 하드코딩</b><span>정답을 코드에 그대로</span></div><span class="badge broken">즉시 노출</span></div>
+    <div class="rung"><span class="n">2</span><div class="t"><b>XOR / AES 암호화</b><span>키와 암호문이 코드에 함께 있음</span></div><span class="badge broken">키 꺼내 복호화</span></div>
+    <div class="rung"><span class="n">3</span><div class="t"><b>네이티브(.so)로 이동</b><span>jadx는 막히지만 Ghidra엔 열림</span></div><span class="badge broken">Ghidra로 읽음</span></div>
+    <div class="rung"><span class="n">4</span><div class="t"><b>런타임 키 유도 + 컨트롤 플로우 난독화</b><span>흐름이 스파게티가 됨</span></div><span class="badge broken">Frida로 런타임 탈취</span></div>
+    <div class="rung"><span class="n">5</span><div class="t"><b>해시 검증 (SHA-256)</b><span>정답을 저장 안 하고 지문만 비교</span></div><span class="badge safe">정적·동적 실패<br></span><span class="badge broken">약하면 brute-force</span></div>
+    <div class="rung"><span class="n">6</span><div class="t"><b>강한 정답 + salt + 느린 KDF(PBKDF2)</b><span>추측 1회에 큰 비용</span></div><span class="badge safe">사실상 못 뚫음</span></div>
+  </div>
+  <p class="note">핵심: 1~4는 "숨기기"라 결국 찾으면 나온다. 5~6은 <b>정답을 아예 안 두는 설계</b>라 뽑을 게 없다. 단, 이건 "확인만 하면 되는 비밀"(비번/정답)에만 통한다.</p>
+</section>
+
+<!-- 5. 공개키/개인키 -->
+<section id="key">
+  <div class="eyebrow">05 / 공개키 · 개인키</div>
+  <h2>공개키 / 개인키, 밀랍 봉인으로 이해하기</h2>
+  <p class="sub">열쇠가 두 개예요. 하나는 "찍는 도장", 하나는 "진짜인지 알아보는 눈". 도장 없이는 같은 봉인을 못 찍습니다.</p>
+
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card">
+      <span class="badge key">🔑 개인키 (Private)</span>
+      <p style="margin:.7em 0 0"><b>도장</b>. 벤더/서버만 가짐. 절대 배포 안 함.<br>이걸로만 <b>서명(발급)</b>할 수 있어요.</p>
+    </div>
+    <div class="card">
+      <span class="badge safe">👁️ 공개키 (Public)</span>
+      <p style="margin:.7em 0 0"><b>알아보는 눈</b>. 아무한테나 줘도 됨. 앱에 넣어도 안전.<br>이걸로는 <b>검증만</b> 되고 서명은 못 해요.</p>
+    </div>
+  </div>
+
+  <div class="svgcard" style="margin-bottom:16px">
+  <svg viewBox="0 0 720 200" role="img" aria-label="서명과 검증 흐름">
+    <g font-family="system-ui" font-size="12.5">
+      <text x="20" y="28" font-weight="700" fill="var(--key)">벤더(서버) — 개인키로 서명</text>
+      <rect x="20" y="40" width="150" height="40" rx="8" fill="var(--surface)" stroke="var(--line)"/><text x="34" y="64" fill="var(--ink)">라이선스 내용</text>
+      <text x="180" y="64" fill="var(--muted)">＋</text>
+      <rect x="200" y="40" width="120" height="40" rx="8" fill="var(--key-soft)"/><text x="214" y="64" fill="var(--key)">🔑 서명</text>
+      <path d="M328 60 H400" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#a)"/>
+      <text x="335" y="52" fill="var(--muted)">배포</text>
+
+      <text x="410" y="28" font-weight="700" fill="var(--safe)">앱 — 공개키로 검증</text>
+      <rect x="410" y="40" width="290" height="40" rx="8" fill="var(--surface)" stroke="var(--line)"/><text x="424" y="64" fill="var(--ink)">내용＋서명을 공개키로 대조</text>
+
+      <rect x="20" y="110" width="330" height="70" rx="10" fill="var(--safe-soft)" stroke="var(--safe)"/>
+      <text x="36" y="135" font-weight="700" fill="var(--safe)">✓ 그대로면</text><text x="36" y="158" fill="var(--ink)">진짜 + 안 바뀜 → 통과</text>
+      <rect x="370" y="110" width="330" height="70" rx="10" fill="var(--broken-soft)" stroke="var(--broken)"/>
+      <text x="386" y="135" font-weight="700" fill="var(--broken)">✗ 한 글자만 바뀌거나</text><text x="386" y="158" fill="var(--ink)">남의 키로 서명 → 실패</text>
+      <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--muted)"/></marker></defs>
+    </g>
+  </svg>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow" style="color:var(--muted)">직접 해보기 (시뮬레이션)</div>
+    <h3 style="margin:.3em 0 .8em">서명 → 검증 → 변조 실험</h3>
+    <div class="demo">
+      <div class="row"><label style="width:70px">내용</label><input id="msg" value="user=demo;plan=pro" aria-label="라이선스 내용"></div>
+      <div class="row">
+        <button class="btn" id="sign">🔑 개인키로 서명</button>
+        <button class="btn ghost" id="verify">👁️ 공개키로 검증</button>
+        <button class="btn ghost" id="tamper">✂️ 내용 몰래 바꾸기</button>
+      </div>
+      <div class="result" id="out">서명 버튼을 눌러 시작하세요.</div>
+    </div>
+    <p class="note">＊브라우저 안 시뮬레이션이에요. 실제로는 openssl로 Ed25519 서명(64바이트)을 만들고 검증합니다. 원리는 동일: 내용이 조금이라도 바뀌면 서명이 깨져요.</p>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <b>봉인이 못 하는 것 (오해 주의)</b>
+    <div class="grid3" style="margin-top:12px">
+      <div><span class="badge broken">비밀 유지 ✗</span><p class="note" style="margin-top:8px">암호화가 아니라 봉인. 내용은 그대로 읽힘.</p></div>
+      <div><span class="badge broken">복사 방지 ✗</span><p class="note" style="margin-top:8px">서명된 파일은 복사해도 유효 → 서버 필요.</p></div>
+      <div><span class="badge broken">검사 우회 ✗</span><p class="note" style="margin-top:8px">검증 코드를 통째로 패치하면 무시됨.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 클라 vs 서버 -->
+<section id="server">
+  <div class="eyebrow">06 / 어디서 지키나</div>
+  <h2>확인(verify)은 앱에서, 사용(use)·판정은 서버에서</h2>
+  <p class="sub">"이 값을 확인만 하면 되나, 실제로 써야 하나?"가 전부예요.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>지켜야 할 것</th><th>어디서</th><th>왜</th></tr></thead>
+      <tbody>
+        <tr><td>사용자 비밀번호 확인</td><td>앱(KDF) 또는 서버</td><td>원본을 안 두면 앱에서도 안전</td></tr>
+        <tr><td>라이선스 진위</td><td>앱 (공개키 검증)</td><td>검증만이라 공개키로 충분</td></tr>
+        <tr><td>라이선스 <b>발급</b></td><td class="mono">서버 (개인키)</td><td>발급 권한을 앱에 두면 위조됨</td></tr>
+        <tr><td>재사용/시트/<b>유일성</b></td><td class="mono">서버 (상태)</td><td>앱은 복제·초기화 가능</td></tr>
+        <tr><td>결제·게임결과 <b>최종 판정</b></td><td class="mono">서버</td><td>클라 조작을 무력화</td></tr>
+        <tr><td>API 키 등 <b>실제 쓰는 비밀</b></td><td class="mono">서버</td><td>앱에 있으면 쓰는 순간 메모리에서 탈취됨</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">실제로 로컬 활성화 서버를 만들어, 같은 라이선스를 3번째 기기에서 쓰려 하면 <span class="pill">409 seat 초과</span>로 막히는 것까지 확인했어요. 클라를 아무리 뜯어도 서버가 쥔 "몇 대 썼나"는 못 바꿉니다.</p>
+</section>
+
+<!-- 7. 네트워크 -->
+<section id="net">
+  <div class="eyebrow">07 / 네트워크</div>
+  <h2>앱이 밖으로 뭘 보내나 (mitmproxy)</h2>
+  <p class="sub">가운데에 프록시를 끼워 TLS를 대신 맺으면, 앱의 CA 신뢰 여부에 따라 통신이 보이거나 막힌다.</p>
+  <div class="svgcard">
+  <svg viewBox="0 0 720 150" role="img" aria-label="mitmproxy 중간자 구조">
+    <g font-family="system-ui" font-size="13" text-anchor="middle">
+      <rect x="20" y="45" width="140" height="60" rx="10" fill="var(--surface)" stroke="var(--line)"/><text x="90" y="80" fill="var(--ink)">📱 앱</text>
+      <rect x="290" y="45" width="140" height="60" rx="10" fill="var(--brand-soft)" stroke="var(--brand)"/><text x="360" y="73" fill="var(--brand)" font-weight="700">🕵️ mitmproxy</text><text x="360" y="92" fill="var(--brand)" font-size="11">여기서 평문을 봄</text>
+      <rect x="560" y="45" width="140" height="60" rx="10" fill="var(--surface)" stroke="var(--line)"/><text x="630" y="80" fill="var(--ink)">🌐 서버</text>
+      <path d="M162 75 H288" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#b)"/>
+      <path d="M432 75 H558" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#b)"/>
+      <text x="225" y="34" fill="var(--muted)" font-size="11">TLS (mitm 인증서)</text>
+      <text x="495" y="34" fill="var(--muted)" font-size="11">TLS (진짜)</text>
+      <text x="360" y="132" fill="var(--muted)" font-size="12">CA를 신뢰시키면 → URL·토큰·바디가 평문으로 보임</text>
+      <defs><marker id="b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--muted)"/></marker></defs>
+    </g>
+  </svg>
+  </div>
+  <div class="grid3" style="margin-top:16px">
+    <div class="card"><span class="badge broken">CA 신뢰 안 함</span><p class="note" style="margin-top:8px">위조 인증서라 앱이 거부 → 안 보임.</p></div>
+    <div class="card"><span class="badge safe">CA 신뢰함</span><p class="note" style="margin-top:8px">복호화되어 <span class="mono">?token=ABC123</span>까지 노출.</p></div>
+    <div class="card"><span class="badge key">SSL Pinning</span><p class="note" style="margin-top:8px">특정 인증서만 믿어 거부 → Frida로 우회.</p></div>
+  </div>
+</section>
+
+<!-- 8. 전체 지도 -->
+<section id="map">
+  <div class="eyebrow">08 / 전체 지도</div>
+  <h2>지금까지의 스터디 지도</h2>
+  <p class="sub">뜯기(공격)와 지키기(방어)는 같은 지식의 양면이에요.</p>
+  <div class="grid2">
+    <div class="card">
+      <span class="badge key">뜯기 (분석)</span>
+      <ul style="margin:.7em 0 0;padding-left:18px;color:var(--ink)">
+        <li>APK/IPA 구조 열기</li>
+        <li>jadx / Ghidra로 코드 읽기</li>
+        <li>Frida로 런타임 후킹 (키·정답 탈취)</li>
+        <li>mitmproxy로 통신 가로채기</li>
+        <li>권한·트래커·URL 정적 감사</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="badge safe">지키기 (방어)</span>
+      <ul style="margin:.7em 0 0;padding-left:18px;color:var(--ink)">
+        <li>난독화·네이티브·안티디버깅 (시간 벌기)</li>
+        <li>해시/KDF로 정답 원본 없애기</li>
+        <li>공개키 서명으로 위조 차단</li>
+        <li>서버로 발급·유일성·최종판정 이관</li>
+        <li>SSL Pinning으로 통신 보호</li>
+      </ul>
+    </div>
+  </div>
+  <div class="thesis" style="margin-top:24px">다시 한 줄 &mdash; 방어는 <b>비용을 올릴</b> 뿐 완벽하지 않다. 그래서 진짜 중요한 비밀은
+  <b>클라이언트에 두지 않는다.</b> 확인용은 KDF로 없애고, 사용·판정은 서버로.</div>
+</section>
+
+<footer>
+  <div>모바일 앱 리버싱 개인 스터디 · 정적/동적 분석과 방어 설계 · OWASP 공개 샘플과 직접 만든 데모로 실습</div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  // 아주 단순한 "서명" 시뮬레이션: 내용의 지문(간이 해시)을 개인키(고정 비밀)와 섞어 서명을 만든다.
+  // 검증은 현재 내용으로 다시 계산해 서명과 대조. 내용이 바뀌면 불일치 -> 실패.
+  var PRIV = 20260822; // 개인키(시뮬레이션)
+  function fp(s){ var h=2166136261; for(var i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=(h*16777619)>>>0; } return h>>>0; }
+  function sign(s){ return ((fp(s)^PRIV)>>>0).toString(16).padStart(8,'0'); }
+  var sig=null, msgEl=document.getElementById('msg'), out=document.getElementById('out');
+  function set(t,cls){ out.textContent=t; out.className='result'+(cls?' '+cls:''); }
+  document.getElementById('sign').onclick=function(){
+    sig=sign(msgEl.value);
+    set('🔑 서명 생성됨: '+sig+'  (개인키로만 만들 수 있음)');
+  };
+  document.getElementById('verify').onclick=function(){
+    if(sig===null){ set('먼저 서명을 만들어 주세요.'); return; }
+    if(sign(msgEl.value)===sig) set('✓ 검증 성공 — 진짜이고 내용이 그대로입니다.','ok');
+    else set('✗ 검증 실패 — 내용이 바뀌었거나 서명이 안 맞습니다.','bad');
+  };
+  document.getElementById('tamper').onclick=function(){
+    msgEl.value = msgEl.value.replace('pro','ENTERPRISE');
+    set('✂️ 내용을 몰래 바꿨습니다. 이제 "검증"을 눌러보세요 → 실패할 거예요.');
+  };
+})();
+</script>
