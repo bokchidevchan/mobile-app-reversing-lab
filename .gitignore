@@ -13,6 +13,7 @@ sample-apps/
 *.log
 out/
 out-container/
+out-l2/
 decompiled/
 
 # 개인 메모
