@@ -148,7 +148,8 @@ input[type=text]{flex:1;min-width:180px;font-family:var(--mono);font-size:14px;p
     <button class="tab" data-tab="obf"><span class="tn">09</span><span class="ico">🌀</span>난독화 도구</button>
     <button class="tab" data-tab="real"><span class="tn">10</span><span class="ico">🎯</span>실전 앱 분석</button>
     <button class="tab" data-tab="adv"><span class="tn">11</span><span class="ico">🧱</span>심화 관문</button>
-    <button class="tab" data-tab="map"><span class="tn">12</span><span class="ico">🗺️</span>전체 지도</button>
+    <button class="tab" data-tab="ai"><span class="tn">12</span><span class="ico">🤖</span>AI와 리버싱</button>
+    <button class="tab" data-tab="map"><span class="tn">13</span><span class="ico">🗺️</span>전체 지도</button>
   </div>
 </aside>
 
@@ -538,6 +539,60 @@ JNI: gXftm3iswpkVgBNDUp  ← 난독화된 이름으로 네이티브 진입</pre>
     <b>③ 더 센 난독화 (참고)</b>
     <p style="margin:.6em 0 0"><b>OLLVM</b>은 컴파일러 수준에서 흐름을 흩어 Ghidra 디컴파일을 스파게티로 만든다(손 평탄화와 달리 옵티마이저 내성). <b>화이트박스 크립토</b>는 "떼어낼 키" 자체를 없앤다. 이 지점부터는 정적이 매우 힘들어 동적·계측 위주로 간다.</p>
   </div>
+</section>
+
+<!-- AI -->
+<section class="panel" id="tab-ai">
+  <div class="eyebrow">12 / AI와 리버싱</div>
+  <h1 class="ptitle">"AI 돌리면 되는 거 아냐?" — 되는 것과 안 되는 것</h1>
+  <p class="psub">AI로 리버싱이 많이 쉬워진 건 사실. 다만 쉬워지는 축과 여전히 사람이 해야 하는 축이 갈립니다.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="badge safe">🟢 AI가 확 쉽게 해주는 것</span>
+      <ul style="margin:.7em 0 0;padding-left:18px">
+        <li>디컴파일 결과 해석 (이 함수 뭐하는지)</li>
+        <li>뭉개진 변수·함수 이름 의미 추론</li>
+        <li>Frida/reFlutter 등 <b>스크립트 작성</b></li>
+        <li>개념·알고리즘 설명, 방향 잡기</li>
+        <li>큰 코드에서 문자열·흐름 찾기</li>
+      </ul>
+      <p class="note">= "읽고, 설명하고, 스크립트 짜는" 일. 숙련된 파트너가 옆에 붙은 셈.</p>
+    </div>
+    <div class="card">
+      <span class="badge broken">🔴 여전히 사람이 해야 하는 것</span>
+      <ul style="margin:.7em 0 0;padding-left:18px">
+        <li>실제로 <b>실행</b>·환경 세팅 (에뮬·기기)</li>
+        <li>버전 맞춘 <b>도구 빌드</b> (blutter, hermes-dec)</li>
+        <li><b>동적 계측</b>·안티탐지 우회 실행</li>
+        <li>패킹·화이트박스 등 물리적 장벽 넘기</li>
+        <li><b>AI의 "자신 있는 오답" 검증</b></li>
+      </ul>
+      <p class="note">= "실행하고 검증하는" 일. AI는 님 환경에서 뭘 돌려주지 않는다.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <b>이번 스터디에서 AI가 "자신 있게 틀린" 것들 (직접 돌려서야 잡음)</b>
+    <div class="list" style="margin-top:10px">
+      <div class="item"><span class="ic">⚠️</span><div class="body"><b>Frida 17 Java 브리지 분리</b><span>"Java is not defined" — 16.7.19로 맞춰서 해결</span></div></div>
+      <div class="item"><span class="ic">⚠️</span><div class="body"><b>-O2가 XOR을 상수폴딩</b><span>평문이 바이너리에 박힘 → volatile로 수정</span></div></div>
+      <div class="item"><span class="ic">⚠️</span><div class="body"><b>-O2가 memcmp 인라인</b><span>후킹 대상이 사라짐 → -fno-builtin-memcmp</span></div></div>
+      <div class="item"><span class="ic">⚠️</span><div class="body"><b>otool 리틀엔디언 파싱</b><span>fgal vs flag — 파일에서 직접 읽어 교정</span></div></div>
+      <div class="item"><span class="ic">⚠️</span><div class="body"><b>"루트 탐지 뜬다" 단정</b><span>실제론 안 걸림(su가 앱 PATH에 없음)</span></div></div>
+      <div class="item"><span class="ic">⚠️</span><div class="body"><b>Android 14 system CA</b><span>read-only+APEX 벽 — 돌려보고서야 확인</span></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <b>Flutter(libapp.so)가 특히 "그냥 AI"가 안 되는 이유</b>
+    <p style="margin:.6em 0 0">Dart AOT 스냅샷은 <b>버전마다 바뀌는 커스텀 포맷</b>이라, 바이트를 AI에 던지면 지어냅니다.
+    실제 작업은 "엔진 버전 확인 → 맞는 blutter 빌드 → 실행해 이름 복원"인데, 이건 추론이 아니라 <b>실행·노가다</b>예요.
+    난독화(--obfuscate)면 이름조차 안 남아 동적으로 가야 하고요.</p>
+  </div>
+
+  <div class="thesis">실력의 핵심이 옮겨갔다 &mdash; <b>"정답을 아느냐"에서 "AI가 틀렸는지 알아채고, 도구로 검증할 수 있느냐"로.</b>
+  AI를 잘 쓰되, 결과를 못 믿을 때 직접 돌려 확인하는 사람이 강하다.</div>
 </section>
 
 <!-- MAP -->
