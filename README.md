@@ -12,7 +12,7 @@ Android와 iOS 앱이 실제로 어떻게 빌드되고, 배포된 바이너리�
 - [ ] 네트워크 트래픽 분석: mitmproxy, SSL Pinning
 - [ ] 플랫폼 심사 정책: Google Play / App Store
 - [ ] Flutter/Hybrid 앱의 바이너리 특성 (libapp.so, 스냅샷)
-- [ ] 샘플 앱 정적/동적 분석 연습
+- [x] 샘플 앱 정적/동적 분석 연습 (UnCrackable L1~L3, License_01 keygen / L4 r2pay는 예정)
 
 ## 폴더 구조
 
