@@ -64,6 +64,25 @@ Mach-O 로드 커맨드의 `LC_ENCRYPTION_INFO`에서 `cryptid=1`이면 암호�
 
 Frida/objection 자체는 Android와 똑같이 쓴다. 붙는 대상이 탈옥 기기나 시뮬레이터라는 것만 다르다.
 
+## Frida로 키 탈취할 때 iOS에서 보는 지점
+
+원리는 Android와 같다. 복호화하려면 키가 메모리에 떠야 하니 그 순간을 가로챈다.
+iOS에서 흔한 표적은 이렇다.
+
+- `CCCrypt` (CommonCrypto): iOS AES의 대부분이 이걸 거친다. 인자에 키 포인터와 키 길이가
+  그대로 들어와서, 후킹해 인자만 읽으면 키가 나온다. 가장 쉬운 표적.
+- Keychain API: `SecItemCopyMatching`(저장값 읽기), `SecKeyCreateDecryptedData`(복호화)
+- 앱 자체 암호 메서드, `SSL_read`/`SSL_write`(TLS 평문)
+
+## ObjC와 Swift는 후킹 난이도가 다르다
+
+- ObjC는 메서드 이름이 심볼에 남고 `objc_msgSend`로 동적 디스패치한다. 그래서 Frida가
+  이름만으로 잡는다: `ObjC.classes.클래스['- 메서드:']`.
+- Swift는 이름이 뭉개지고(`$s...`) 정적 디스패치라 이름 기반 후킹이 안 된다.
+  `swift-demangle`로 뭐가 뭔지 파악한 뒤, 심볼 주소를 찾아 `Interceptor.attach`로 붙인다.
+
+요즘 앱이 Swift로 가면서 후킹이 한 단계 더 번거로워졌다.
+
 ## 이 저장소에서 한 실습 범위
 
 `tools/macho-crackme.c`로 작은 Mach-O를 직접 빌드해서 세 가지를 해봤다.

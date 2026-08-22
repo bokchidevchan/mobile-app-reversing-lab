@@ -110,7 +110,67 @@ Android에서 AES 결과 가로챈 것과 똑같은 그림.
 | 안의 실행 코드 | classes.dex (바이트코드) | 앱.app/앱 (Mach-O 기계어) |
 | 이번에 분석한 것 | 실제 APK | Mach-O 알맹이만 (직접 빌드) |
 
+## iOS 방식 AES 키 탈취 (CCCrypt + Frida)
+
+iOS 앱은 대부분 CommonCrypto의 CCCrypt로 AES를 한다. 복호화할 때 키가 인자로 들어가니,
+그 함수를 후킹해서 인자만 읽으면 키가 털린다. CommonCrypto는 macOS에도 있어서 iOS 없이 연습했다.
+
+`tools/ios-demos/cc-demo.c`로 CCCrypt로 암/복호화하는 데모를 만들고,
+`tools/cccrypt-hook.js`로 후킹했다.
+
+```
+[+] CCCrypt(암호화) -> 키(16B): "s3cr3t_ios_key!!"
+[+] CCCrypt(복호화) -> 키(16B): "s3cr3t_ios_key!!"
+```
+
+키를 코드에서 안 찾고, 앱이 CCCrypt를 부르는 순간 인자로 들어온 걸 가로챘다.
+Android에서 Cipher/복호화 함수 후킹한 것과 발상이 같다. 실무 표적은 CCCrypt 말고도
+Keychain API(SecItemCopyMatching), 앱 자체 암호 메서드, SSL_read/write(네트워크 평문)가 있다.
+
+## ObjC는 이름으로, Swift는 뭉개져서
+
+같은 CryptoManager.decrypt(withKey:)를 ObjC와 Swift로 각각 빌드해서 nm으로 심볼을 비교했다.
+(`tools/ios-demos/objc-demo.m`, `tools/ios-demos/swift-demo.swift`)
+
+ObjC:
+
+```
+-[CryptoManager decryptWithKey:]
+_objc_msgSend$decryptWithKey:
+```
+
+메서드 이름이 그대로 심볼에 있고 objc_msgSend로 동적 디스패치를 한다.
+그래서 Frida가 이름만으로 잡는다: `ObjC.classes.CryptoManager['- decryptWithKey:']`.
+
+Swift:
+
+```
+_$s4main13CryptoManagerC7decrypt7withKeyS2S_tF
+```
+
+이름이 뭉개져서 뭔지 모른다. swift-demangle로 풀면:
+
+```
+main.CryptoManager.decrypt(withKey: Swift.String) -> Swift.String
+```
+
+Swift는 정적 디스패치라 objc_msgSend를 안 거친다. 그래서 이름 기반 후킹이 안 되고
+심볼 주소를 찾아 Interceptor.attach로 붙여야 한다. 요즘 Swift 앱 후킹이 더 번거로운 이유.
+
+## 왜 Android와 iOS가 이렇게 다른가 (컴파일 차이)
+
+만들어지는 결과물 자체가 다르다.
+
+- Android: Kotlin/Java -> JVM 바이트코드 -> DEX 바이트코드. CPU 독립적인 중간표현이 APK에 실린다.
+  메타데이터(이름, 타입)가 풍부해서 jadx가 소스 가깝게 복원한다. 실행은 기기에서 ART가 컴파일.
+- iOS: Swift/ObjC -> LLVM -> 네이티브 ARM64 기계어로 바로 컴파일해서 Mach-O로 배포.
+  바이트코드가 안 실린다(Bitcode는 Xcode 14에서 폐기). 메타데이터가 적어 jadx 같은 게 불가능.
+  단 ObjC 런타임 이름은 남아서 class-dump과 이름 기반 후킹이 된다.
+
+이유: Android는 여러 제조사/CPU 이식성 때문에 VM+바이트코드, iOS는 단일 하드웨어라
+성능·크기·통제 위해 네이티브 AOT. 그래서 iOS 리버싱이 한 단계 더 손이 간다.
+
 ## 다음
 
 - 오픈소스 취약 앱(iGoat-Swift, DVIA-v2)을 시뮬레이터용으로 빌드해서 진짜 iOS 앱 분석 흐름 타보기.
-- Ghidra로 check 함수를 의사 C까지 올려서 어셈블리 대신 읽어보기.
+- Swift로 짠 함수를 주소 기반으로 실제 후킹해보기.
