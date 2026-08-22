@@ -52,7 +52,36 @@ libtool-checker.so라는 별도 네이티브 라이브러리가 있는 것 자�
 - 로직과 탐지를 전부 네이티브로 내리고 JNI 이름까지 난독화한 게 실제 상용 보호에 가장 가깝다.
 - 전체 플래그 공략은 별도의 깊은 세션으로 남긴다. 이 노트는 그 출발 지도.
 
-## 다음
+## 진전: libtool-checker.so 정체 규명 (Ghidra)
 
-- libtool-checker.so부터 Ghidra로 뜯어 탐지 목록화 → Frida 우회 스크립트 작성.
-- 에뮬레이터에서 앱 실행 + gXftm3iswpkVgBNDUp 입출력 후킹으로 토큰화 규칙 역추적.
+작은 쪽(libtool-checker.so, 10KB)을 실제로 뜯었더니 정체가 나왔다: **RootBeer**(com.scottyab.rootbeer),
+유명 오픈소스 루트 탐지 라이브러리다. 심볼:
+
+```
+Java_com_scottyab_rootbeer_RootBeerNative_checkForRoot
+Java_com_scottyab_rootbeer_RootBeerNative_setLogDebugMessages
+_Z6existsPKc   // exists(const char*)
+```
+
+checkForRoot 디컴파일:
+
+```c
+bool checkForRoot(env, this, jarray paths){
+  int cnt=0, n=GetArrayLength(paths);
+  for(i=0;i<n;i++){
+    const char* p = GetStringUTFChars(paths[i]);
+    cnt += exists(p);          // su 경로가 존재하면 +1
+  }
+  return cnt > 0;              // 하나라도 있으면 루팅으로 판정
+}
+```
+
+즉 탐지 경로 목록은 Java(RootBeer)에서 넘어오고, 네이티브는 그 경로들의 존재만 센다.
+**우회 지점 확정**: `Java_com_scottyab_rootbeer_RootBeerNative_checkForRoot`를 Frida로 항상 false 반환,
+또는 Java RootBeer의 isRooted 계열 메서드 후킹. (에뮬레이터엔 su가 앱 PATH에 없어 실제론 안 걸릴 수도.)
+
+## 이번 도달점 / 남은 것
+
+- 도달: 구조·보호 맵 + 탐지층(RootBeer) 규명 + 우회 지점 확정.
+- 남음(별도 세션): libnative-lib.so(1.7MB)의 gXftm3iswpkVgBNDUp 토큰화/검증 로직 분석 →
+  다단계 플래그 추출. 함수가 커서 Ghidra 정적 + Frida 입출력 관찰 병행 필요.
